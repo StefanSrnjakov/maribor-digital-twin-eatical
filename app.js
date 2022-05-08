@@ -6,6 +6,7 @@ const logger = require('morgan');
 const dotenv = require('dotenv');
 dotenv.config();
 
+
 //MONGOOSE
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_CONNECT, () => console.log('Connected to database!'));
@@ -60,5 +61,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+const bgUpdateRestaurants = require('../maribor-digital-twin/bgUpdateRestaurants')
+bgUpdateRestaurants.restaurantUpdate();
+
 
 module.exports = app;

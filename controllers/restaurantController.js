@@ -45,11 +45,22 @@ module.exports = {
     },
 
     create: function (req, res) {
-        const restaurant = new RestaurantModel({
+
+    const restaurant = new RestaurantModel({
+      username : req.body.username,
 			password : req.body.password,
+            name : req.body.name,
+            address : req.body.address,
+            opening_hours : req.body.opening_hours,
+            email : req.body.email,
+            telephone : req.body.telephone,
+            website : req.body.website,
 			orders : req.body.orders,
 			image_id : req.body.image_id,
-			meals : req.body.meals
+			meals : req.body.meals,
+            place_id : req.body.place_id,
+            google_rating : req.body.google_rating,
+            location: req.body.location
         });
 
         restaurant.save(function (err, restaurant) {
@@ -112,11 +123,21 @@ module.exports = {
                 });
             }
 
+            restaurant.username = req.body.username ? req.body.username : restaurant.username;
             restaurant.password = req.body.password ? req.body.password : restaurant.password;
-			restaurant.orders = req.body.orders ? req.body.orders : restaurant.orders;
+            restaurant.name = req.body.name ? req.body.name : restaurant.name;
+            restaurant.address = req.body.address ? req.body.address : restaurant.address;
+            restaurant.opening_hours = req.body.opening_hours ? req.body.opening_hours : restaurant.opening_hours;
+            restaurant.email = req.body.email ? req.body.email : restaurant.email;
+            restaurant.telephone = req.body.telephone ? req.body.telephone : restaurant.telephone;
+            restaurant.website = req.body.website ? req.body.website : restaurant.website;
+            restaurant.orders = req.body.orders ? req.body.orders : restaurant.orders;
 			restaurant.image_id = req.body.image_id ? req.body.image_id : restaurant.image_id;
 			restaurant.meals = req.body.meals ? req.body.meals : restaurant.meals;
-			
+            restaurant.place_id = req.body.place_id ? req.body.place_id : restaurant.place_id;
+            restaurant.google_rating = req.body.google_rating ? req.body.google_rating : restaurant.google_rating;
+            restaurant.location = req.body.location ? req.body.location : restaurant.location;
+
             restaurant.save(function (err, restaurant) {
                 if (err) {
                     return res.status(500).json({
