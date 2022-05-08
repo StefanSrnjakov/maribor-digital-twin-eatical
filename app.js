@@ -1,42 +1,31 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const dotenv = require('dotenv');
+dotenv.config();
+
 
 //MONGOOSE
-var mongoose = require('mongoose');
-var mongoDB = 'mongodb+srv://najaki:najaki123@maribor-digital-twin-db.rwybp.mongodb.net/maribor-digital-twin-db';
-mongoose.connect(mongoDB);
+const mongoose = require('mongoose');
+mongoose.connect(process.env.DB_CONNECT, () => console.log('Connected to database!'));
 mongoose.Promise = global.Promise;
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, "MongoDB connection error."));
 
 
-var indexRouter = require('./routes/index');
-var allergenRouter = require('./routes/allergenRoutes')
-var categoryRouter = require('./routes/categoryRoutes')
-var imageRouter = require('./routes/imageRoutes')
-var mealRouter = require('./routes/mealRoutes')
-var orderRouter = require('./routes/orderRoutes')
-var restaurantRouter = require('./routes/restaurantRoutes')
-var userRouter = require('./routes/userRoutes')
+const indexRouter = require('./routes/index');
+const allergenRouter = require('./routes/allergenRoutes')
+const categoryRouter = require('./routes/categoryRoutes')
+const imageRouter = require('./routes/imageRoutes')
+const mealRouter = require('./routes/mealRoutes')
+const orderRouter = require('./routes/orderRoutes')
+const restaurantRouter = require('./routes/restaurantRoutes')
+const userRouter = require('./routes/userRoutes')
 
-var app = express();
 
-//SESSION
-var session = require('express-session');
-var MongoStore = require('connect-mongo');
-app.use(session({
-  secret: 'work hard',
-  resave: true,
-  saveUninitialized: false,
-  store: MongoStore.create({mongoUrl: mongoDB})
-}));
-app.use(function (req, res, next) {
-  res.locals.session = req.session;
-  next();
-});
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -72,5 +61,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+const bgUpdateRestaurants = require('../maribor-digital-twin/bgUpdateRestaurants')
+bgUpdateRestaurants.restaurantUpdate();
+
 
 module.exports = app;
