@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
 //MONGOOSE
 var mongoose = require('mongoose');
 var mongoDB = 'mongodb+srv://najaki:najaki123@maribor-digital-twin-db.rwybp.mongodb.net/maribor-digital-twin-db';
@@ -72,5 +73,9 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+const bgUpdateRestaurants = require('../maribor-digital-twin/bgUpdateRestaurants')
+bgUpdateRestaurants.restaurantUpdate();
+
 
 module.exports = app;

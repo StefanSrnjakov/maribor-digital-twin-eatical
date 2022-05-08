@@ -65,8 +65,7 @@ module.exports = {
 			meals : req.body.meals,
             place_id : req.body.place_id,
             google_rating : req.body.google_rating,
-            latitude : req.body.latitude,
-            longitude : req.body.longitude
+            location: req.body.location
         });
 
         restaurant.save(function (err, restaurant) {
@@ -114,8 +113,7 @@ module.exports = {
 			restaurant.meals = req.body.meals ? req.body.meals : restaurant.meals;
             restaurant.place_id = req.body.place_id ? req.body.place_id : restaurant.place_id;
             restaurant.google_rating = req.body.google_rating ? req.body.google_rating : restaurant.google_rating;
-            restaurant.latitude = req.body.latitude ? req.body.latitude : restaurant.latitude;
-            restaurant.longitude = req.body.longitude ? req.body.longitude : restaurant.longitude;
+            restaurant.location = req.body.location ? req.body.location : restaurant.location;
 
             restaurant.save(function (err, restaurant) {
                 if (err) {
