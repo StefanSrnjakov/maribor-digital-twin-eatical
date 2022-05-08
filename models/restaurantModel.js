@@ -19,8 +19,17 @@ var restaurantSchema = new Schema({
 	'meals' : Array,
 	'place_id' : String,
 	'google_rating' : Number,
-	'latitude' : Number,
-	'longitude' : Number
+	'location' : {
+		type: {
+			type: String,
+			enum: ['Point'],
+			required: true
+		},
+		coordinates: {
+			type: [Number],
+			required: true
+		}
+	}
 });
 
 module.exports = mongoose.model('restaurant', restaurantSchema);
