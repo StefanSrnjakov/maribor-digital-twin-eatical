@@ -42,7 +42,7 @@ const userSchema = new Schema({
 	 	type: Schema.Types.ObjectId,
 	 	ref: 'image'
 	},
-	'orders' : Array
+	'orders' : [{type: Schema.Types.ObjectId, ref: 'order'}]
 });
 
 module.exports = mongoose.model('user', userSchema);

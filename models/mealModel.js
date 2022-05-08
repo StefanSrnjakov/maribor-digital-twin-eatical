@@ -3,8 +3,8 @@ var Schema   = mongoose.Schema;
 
 var mealSchema = new Schema({
 	'name' : String,
-	'allergens' : Array,
-	'category' : Array,
+	'allergens' : [{type: Schema.Types.ObjectId, ref: 'allergen'}],
+	'category' : [{type: Schema.Types.ObjectId, ref: 'category'}],
 	'price' : Number,
 	'restaurant_id' : {
 	 	type: Schema.Types.ObjectId,

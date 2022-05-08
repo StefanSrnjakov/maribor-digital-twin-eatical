@@ -1,5 +1,7 @@
 var OrderModel = require('../models/orderModel.js');
-
+var UserModel = require('../models/userModel.js');
+var RestaurantModel = require('../models/restaurantModel.js');
+var MealModel = require('../models/mealModel.js');
 /**
  * orderController.js
  *
@@ -56,8 +58,8 @@ module.exports = {
 			order_time : req.body.order_time,
 			price : req.body.price,
 			meal_id : req.body.meal_id,
-			user_id : req.body.user_id,
-			completed : req.body.completed
+			user_id : null,
+			completed : false
         });
 
         order.save(function (err, order) {
@@ -67,7 +69,22 @@ module.exports = {
                     error: err
                 });
             }
-
+            MealModel.findById(req.body.meal_id, function(err, meal){
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when getting meal',
+                        error: err
+                    });
+                }
+                RestaurantModel.findByIdAndUpdate(meal.restaurant_id, {$push : {orders : order._id}}, function(err, restaurant){
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when updating restaurant',
+                            error: err
+                        });
+                    }
+                });
+            });
             return res.status(201).json(order);
         });
     },
@@ -127,6 +144,45 @@ module.exports = {
             }
 
             return res.status(204).json();
+        });
+    },
+
+    /**
+     * orderController.claim()
+     */
+    claim: function (req, res){
+        UserModel.findByIdAndUpdate(req.user._id, {$push : {orders : req.params.id}}, function(err, user){
+            if(err){
+                return res.status(500).json({
+                    message: 'Error when updating user',
+                    error: err
+                });
+            }
+        });
+        OrderModel.findByIdAndUpdate(req.params.id, {user_id : req.user._id}, function(err, order){
+            if(err){
+                return res.status(500).json({
+                    message: 'Error when updating order',
+                    error: err
+                });
+            }
+            return res.json(order);
+        });
+    },
+
+    /**
+     * orderController.complete()
+     */
+    complete: function(req, res){
+        req.body.completed = true;
+        OrderModel.findByIdAndUpdate(req.params.id, {completed : true}, function(err, order){
+            if(err){
+                return res.status(500).json({
+                    message: 'Error when updating order',
+                    error: err
+                });
+            }
+            return res.json(order);
         });
     }
 };

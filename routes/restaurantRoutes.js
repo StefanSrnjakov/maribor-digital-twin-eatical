@@ -8,6 +8,7 @@ const {loginValidation} = require("../middleware/validation");
  * GET
  */
 router.get('/', restaurantController.list);
+router.get('/nearby', restaurantController.list_nearby);
 
 /*
  * GET
@@ -24,6 +25,7 @@ router.post('/logout', authenticateRestaurant, restaurantController.logout);
  * PUT
  */
 router.put('/:id', restaurantController.update);
+router.put('/rate/:id', restaurantController.rate);
 
 /*
  * DELETE

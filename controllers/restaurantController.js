@@ -47,20 +47,21 @@ module.exports = {
     create: function (req, res) {
 
     const restaurant = new RestaurantModel({
-      username : req.body.username,
-			password : req.body.password,
-            name : req.body.name,
-            address : req.body.address,
-            opening_hours : req.body.opening_hours,
-            email : req.body.email,
-            telephone : req.body.telephone,
-            website : req.body.website,
-			orders : req.body.orders,
-			image_id : req.body.image_id,
-			meals : req.body.meals,
-            place_id : req.body.place_id,
-            google_rating : req.body.google_rating,
-            location: req.body.location
+          username : req.body.username,
+          password : req.body.password,
+          name : req.body.name,
+          address : req.body.address,
+          opening_hours : req.body.opening_hours,
+          email : req.body.email,
+          telephone : req.body.telephone,
+          website : req.body.website,
+          orders : [],
+          image_id : req.body.image_id,
+          meals : [],
+          place_id : req.body.place_id,
+          google_rating : req.body.google_rating,
+          location: req.body.location,
+          ratings : []
         });
 
         restaurant.save(function (err, restaurant) {
@@ -132,11 +133,12 @@ module.exports = {
             restaurant.telephone = req.body.telephone ? req.body.telephone : restaurant.telephone;
             restaurant.website = req.body.website ? req.body.website : restaurant.website;
             restaurant.orders = req.body.orders ? req.body.orders : restaurant.orders;
-			restaurant.image_id = req.body.image_id ? req.body.image_id : restaurant.image_id;
-			restaurant.meals = req.body.meals ? req.body.meals : restaurant.meals;
+            restaurant.image_id = req.body.image_id ? req.body.image_id : restaurant.image_id;
+            restaurant.meals = req.body.meals ? req.body.meals : restaurant.meals;
             restaurant.place_id = req.body.place_id ? req.body.place_id : restaurant.place_id;
             restaurant.google_rating = req.body.google_rating ? req.body.google_rating : restaurant.google_rating;
             restaurant.location = req.body.location ? req.body.location : restaurant.location;
+            restaurant.ratings = req.body.ratings ? req.body.ratings : restaurant.ratings;
 
             restaurant.save(function (err, restaurant) {
                 if (err) {
@@ -163,6 +165,41 @@ module.exports = {
             }
 
             return res.status(204).json();
+        });
+    },
+
+    list_nearby: function(req, res){
+        RestaurantModel.find({
+            location:
+                {
+                    $near:
+                        {
+                            $geometry: { type: "Point", coordinates: [46.5547, 15.6459] },
+                            $maxDistance: 500
+                        }
+                }
+        }, function(err, restaurants){
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting restaurants.',
+                    error: err
+                });
+            }
+
+            return res.json(restaurants);
+        });
+    },
+
+    rate: function(req, res){
+        RestaurantModel.findByIdAndUpdate(req.params.id, {$push: {ratings : req.body.rating}}, function(err, restaurant){
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when updating restaurant.',
+                    error: err
+                });
+            }
+
+            return res.json(restaurant);
         });
     }
 };

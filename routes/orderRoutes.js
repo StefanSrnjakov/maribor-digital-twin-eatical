@@ -21,6 +21,8 @@ router.post('/', orderController.create);
  * PUT
  */
 router.put('/:id', orderController.update);
+router.put('/claim/:id', orderController.claim); //need to add kristijan's user login authentication function
+router.put('/complete/:id', orderController.complete); //need to add kristijan's restaurant login authentication function
 
 /*
  * DELETE

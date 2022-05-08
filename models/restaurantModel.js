@@ -11,12 +11,12 @@ var restaurantSchema = new Schema({
 	'email' : String,
 	'telephone' : String,
 	'website' : String,
-	'orders' : Array,
+	'orders' : [{type: Schema.Types.ObjectId, ref: 'order'}],
 	'image_id' : {
 	 	type: Schema.Types.ObjectId,
 	 	ref: 'image'
 	},
-	'meals' : Array,
+	'meals' : [{type: Schema.Types.ObjectId, ref: 'meal'}],
 	'place_id' : String,
 	'google_rating' : Number,
 	'location' : {
@@ -29,7 +29,8 @@ var restaurantSchema = new Schema({
 			type: [Number],
 			required: true
 		}
-	}
+	},
+	'ratings' : [{type: Number}]
 });
 
 module.exports = mongoose.model('restaurant', restaurantSchema);
