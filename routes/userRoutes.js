@@ -1,6 +1,8 @@
-var express = require('express');
-var router = express.Router();
-var userController = require('../controllers/userController.js');
+const express = require('express');
+const router = express.Router();
+const userController = require('../controllers/userController.js');
+const {authenticateUser} = require("../middleware/authentication");
+const {registerValidation, loginValidation} = require("../middleware/validation");
 
 /*
  * GET
@@ -16,6 +18,10 @@ router.get('/:id', userController.show);
  * POST
  */
 router.post('/', userController.create);
+router.post('/register', registerValidation, userController.register);
+router.post('/login', loginValidation, userController.login);
+router.post('/logout', authenticateUser, userController.logout);
+
 
 /*
  * PUT
