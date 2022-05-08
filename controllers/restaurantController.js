@@ -1,4 +1,5 @@
 var RestaurantModel = require('../models/restaurantModel.js');
+const mongoose = require("mongoose");
 
 /**
  * restaurantController.js
@@ -60,13 +61,14 @@ module.exports = {
             email : req.body.email,
             telephone : req.body.telephone,
             website : req.body.website,
-			orders : req.body.orders,
+			orders : [],
 			image_id : req.body.image_id,
-			meals : req.body.meals,
+			meals : [],
             place_id : req.body.place_id,
             google_rating : req.body.google_rating,
             latitude : req.body.latitude,
-            longitude : req.body.longitude
+            longitude : req.body.longitude,
+            ratings : []
         });
 
         restaurant.save(function (err, restaurant) {
@@ -145,6 +147,41 @@ module.exports = {
             }
 
             return res.status(204).json();
+        });
+    },
+
+    list_nearby: function(req, res){
+        RestaurantModel.find({
+            location:
+                {
+                    $near:
+                        {
+                            $geometry: { type: "Point", coordinates: [46.5547, 15.6459] },
+                            $maxDistance: 500
+                        }
+                }
+        }, function(err, restaurants){
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting restaurants.',
+                    error: err
+                });
+            }
+
+            return res.json(restaurants);
+        });
+    },
+
+    rate: function(req, res){
+        RestaurantModel.findByIdAndUpdate(req.params.id, {$push: {ratings : req.body.rating}}, function(err, restaurant){
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when updating restaurant.',
+                    error: err
+                });
+            }
+
+            return res.json(restaurant);
         });
     }
 };

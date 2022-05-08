@@ -6,6 +6,7 @@ var restaurantController = require('../controllers/restaurantController.js');
  * GET
  */
 router.get('/', restaurantController.list);
+router.get('/nearby', restaurantController.list_nearby);
 
 /*
  * GET
@@ -21,6 +22,7 @@ router.post('/', restaurantController.create);
  * PUT
  */
 router.put('/:id', restaurantController.update);
+router.put('/rate/:id', restaurantController.rate);
 
 /*
  * DELETE

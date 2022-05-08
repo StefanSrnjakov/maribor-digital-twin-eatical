@@ -59,7 +59,7 @@ module.exports = {
 			surname : req.body.surname,
 			telephone : req.body.telephone,
 			image_id : req.body.image_id,
-			orders : req.body.orders
+			orders : []
         });
 
         user.save(function (err, user) {
