@@ -6,7 +6,6 @@ function updateRestaurants(apiUrl) {
         .then(response => {
             var restaurants = response.data.local_results
             for (let i = 0; i < restaurants.length; i++) {
-                console.log("vlezi u loop");
                 var RestaurantModel = require('../maribor-digital-twin/models/restaurantModel')
                 RestaurantModel.findOne({place_id: restaurants[i].place_id}, function (err, restaurant) {
                     if (err) {
@@ -33,10 +32,10 @@ function updateRestaurants(apiUrl) {
                         restaurant.google_rating = restaurants[i].rating
                         restaurant.address = restaurants[i].address
                         restaurant.opening_hours = restaurants[i].opening_hours
-                        restaurant.location = {
-                            "type": "Point",
-                            "coordinates": [restaurants[i].gps_coordinates.latitude, restaurants[i].gps_coordinates.longitude]
-                        }
+                        // restaurant.location = {
+                        //     "type": "Point",
+                        //     "coordinates": [restaurants[i].gps_coordinates.latitude, restaurants[i].gps_coordinates.longitude]
+                        // }
                         restaurant.save()
                     }
                 });

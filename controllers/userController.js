@@ -1,4 +1,7 @@
-var UserModel = require('../models/userModel.js');
+const UserModel = require('../models/userModel.js');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const TokenModel = require("../models/tokenModel");
 
 /**
  * userController.js
@@ -7,9 +10,6 @@ var UserModel = require('../models/userModel.js');
  */
 module.exports = {
 
-    /**
-     * userController.list()
-     */
     list: function (req, res) {
         UserModel.find(function (err, users) {
             if (err) {
@@ -23,11 +23,8 @@ module.exports = {
         });
     },
 
-    /**
-     * userController.show()
-     */
     show: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         UserModel.findOne({_id: id}, function (err, user) {
             if (err) {
@@ -47,11 +44,8 @@ module.exports = {
         });
     },
 
-    /**
-     * userController.create()
-     */
     create: function (req, res) {
-        var user = new UserModel({
+        const user = new UserModel({
 			username : req.body.username,
 			password : req.body.password,
 			email : req.body.email,
@@ -59,7 +53,7 @@ module.exports = {
 			surname : req.body.surname,
 			telephone : req.body.telephone,
 			image_id : req.body.image_id,
-			orders : req.body.orders
+			orders : []
         });
 
         user.save(function (err, user) {
@@ -74,11 +68,69 @@ module.exports = {
         });
     },
 
-    /**
-     * userController.update()
-     */
+    register: async function (req, res){
+        //Check if the email is already in the database
+        const emailExist = await UserModel.findOne({email: req.body.email});
+        if(emailExist) return res.status(400).send('Email already exists');
+
+        //Check if the username is already in the database
+        const usernameExist = await UserModel.findOne({username: req.body.username});
+        if(usernameExist) return res.status(400).send('Username already exists');
+
+        //Password hashing
+        const salt = await bcrypt.genSaltSync(10);
+        const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+        const user = new UserModel({
+           username: req.body.username,
+           password: hashPassword,
+           email: req.body.email,
+           name: req.body.name,
+           surname: req.body.surname,
+           telephone: req.body.telephone
+        });
+
+        try{
+            const savedUser = await user.save();
+            res.send({user: savedUser.id});
+        }catch (err){
+            res.status(400).send(err);
+        }
+    },
+
+    login: async function (req, res){
+        //Check if the username is in the database
+        const user = await UserModel.findOne({username: req.body.username});
+        if(!user) return res.status(400).send('Username does not exists');
+
+        //Check if password is correct
+        const validPassword = await bcrypt.compare(req.body.password, user.password);
+        if(!validPassword) return res.status(400).send('Invalid password');
+
+        //Create and assign a token
+        const token = new TokenModel({
+            user_id: user._id,
+            type: 'user'
+        });
+
+        const result = jwt.sign({user_id: user._id, type: 'user'}, process.env.ACCESS_TOKEN_SECRET)
+
+        //Insert token in database
+        token.save(function (err) {
+            if (err) res.status(500).send('Token failed to save');
+            return res.header('auth-token', result).send(result)
+        });
+    },
+
+    logout: async function (req, res) {
+        TokenModel.findOneAndRemove({user_id: req.token.user_id}, function(err){
+            if (err) return res.status(500).send('Token failed to remove');
+            return res.send('Token removed');
+        });
+    },
+
     update: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         UserModel.findOne({_id: id}, function (err, user) {
             if (err) {
@@ -116,13 +168,10 @@ module.exports = {
         });
     },
 
-    /**
-     * userController.remove()
-     */
     remove: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
-        UserModel.findByIdAndRemove(id, function (err, user) {
+        UserModel.findByIdAndRemove(id, function (err) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when deleting the user.',

@@ -11,9 +11,13 @@ var orderSchema = new Schema({
 	},
 	'user_id' : {
 	 	type: Schema.Types.ObjectId,
-	 	ref: 'user'
+	 	ref: 'user',
+		default: null
 	},
-	'completed' : Boolean
+	'completed' : {
+		type: Boolean,
+		default: false
+	}
 });
 
 module.exports = mongoose.model('order', orderSchema);
