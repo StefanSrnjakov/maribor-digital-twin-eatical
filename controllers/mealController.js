@@ -1,15 +1,7 @@
-var MealModel = require('../models/mealModel.js');
+const MealModel = require('../models/mealModel.js');
 
-/**
- * mealController.js
- *
- * @description :: Server-side logic for managing meals.
- */
 module.exports = {
 
-    /**
-     * mealController.list()
-     */
     list: function (req, res) {
         MealModel.find(function (err, meals) {
             if (err) {
@@ -23,11 +15,8 @@ module.exports = {
         });
     },
 
-    /**
-     * mealController.show()
-     */
     show: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         MealModel.findOne({_id: id}, function (err, meal) {
             if (err) {
@@ -47,11 +36,8 @@ module.exports = {
         });
     },
 
-    /**
-     * mealController.create()
-     */
     create: function (req, res) {
-        var meal = new MealModel({
+        const meal = new MealModel({
 			name : req.body.name,
 			allergens : req.body.allergens,
 			category : req.body.category,
@@ -72,11 +58,8 @@ module.exports = {
         });
     },
 
-    /**
-     * mealController.update()
-     */
     update: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         MealModel.findOne({_id: id}, function (err, meal) {
             if (err) {
@@ -112,11 +95,8 @@ module.exports = {
         });
     },
 
-    /**
-     * mealController.remove()
-     */
     remove: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         MealModel.findByIdAndRemove(id, function (err, meal) {
             if (err) {

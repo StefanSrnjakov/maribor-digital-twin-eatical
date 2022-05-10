@@ -1,6 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var orderController = require('../controllers/orderController.js');
+const express = require('express');
+const router = express.Router();
+const orderController = require('../controllers/orderController.js');
+const {authenticateUser, authenticateRestaurant} = require("../middleware/authentication");
 
 /*
  * GET
@@ -21,8 +22,8 @@ router.post('/', orderController.create);
  * PUT
  */
 router.put('/:id', orderController.update);
-router.put('/claim/:id', orderController.claim); //need to add kristijan's user login authentication function
-router.put('/complete/:id', orderController.complete); //need to add kristijan's restaurant login authentication function
+router.put('/claim/:id', authenticateUser, orderController.claim); //need to add kristijan's user login authentication function
+router.put('/complete/:id', authenticateRestaurant, orderController.complete); //need to add kristijan's restaurant login authentication function
 
 /*
  * DELETE

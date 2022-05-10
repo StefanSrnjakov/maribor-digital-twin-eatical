@@ -1,15 +1,7 @@
-var AllergenModel = require('../models/allergenModel.js');
+const AllergenModel = require('../models/allergenModel.js');
 
-/**
- * allergenController.js
- *
- * @description :: Server-side logic for managing allergens.
- */
 module.exports = {
 
-    /**
-     * allergenController.list()
-     */
     list: function (req, res) {
         AllergenModel.find(function (err, allergens) {
             if (err) {
@@ -23,11 +15,8 @@ module.exports = {
         });
     },
 
-    /**
-     * allergenController.show()
-     */
     show: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         AllergenModel.findOne({_id: id}, function (err, allergen) {
             if (err) {
@@ -47,11 +36,8 @@ module.exports = {
         });
     },
 
-    /**
-     * allergenController.create()
-     */
     create: function (req, res) {
-        var allergen = new AllergenModel({
+        const allergen = new AllergenModel({
 			title : req.body.title,
 			image_id : req.body.image_id
         });
@@ -68,11 +54,8 @@ module.exports = {
         });
     },
 
-    /**
-     * allergenController.update()
-     */
     update: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         AllergenModel.findOne({_id: id}, function (err, allergen) {
             if (err) {
@@ -104,11 +87,8 @@ module.exports = {
         });
     },
 
-    /**
-     * allergenController.remove()
-     */
     remove: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         AllergenModel.findByIdAndRemove(id, function (err, allergen) {
             if (err) {

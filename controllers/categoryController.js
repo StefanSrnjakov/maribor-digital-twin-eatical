@@ -1,15 +1,7 @@
-var CategoryModel = require('../models/categoryModel.js');
+const CategoryModel = require('../models/categoryModel.js');
 
-/**
- * categoryController.js
- *
- * @description :: Server-side logic for managing categorys.
- */
 module.exports = {
 
-    /**
-     * categoryController.list()
-     */
     list: function (req, res) {
         CategoryModel.find(function (err, categorys) {
             if (err) {
@@ -23,11 +15,8 @@ module.exports = {
         });
     },
 
-    /**
-     * categoryController.show()
-     */
     show: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         CategoryModel.findOne({_id: id}, function (err, category) {
             if (err) {
@@ -47,11 +36,8 @@ module.exports = {
         });
     },
 
-    /**
-     * categoryController.create()
-     */
     create: function (req, res) {
-        var category = new CategoryModel({
+        const category = new CategoryModel({
 			title : req.body.title,
 			image_id : req.body.image_id
         });
@@ -68,11 +54,8 @@ module.exports = {
         });
     },
 
-    /**
-     * categoryController.update()
-     */
     update: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         CategoryModel.findOne({_id: id}, function (err, category) {
             if (err) {
@@ -104,11 +87,8 @@ module.exports = {
         });
     },
 
-    /**
-     * categoryController.remove()
-     */
     remove: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         CategoryModel.findByIdAndRemove(id, function (err, category) {
             if (err) {

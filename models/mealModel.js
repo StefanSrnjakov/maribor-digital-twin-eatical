@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema   = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema   = mongoose.Schema;
 
-var mealSchema = new Schema({
+const mealSchema = new Schema({
 	'name' : String,
 	'allergens' : [{type: Schema.Types.ObjectId, ref: 'allergen'}],
 	'category' : [{type: Schema.Types.ObjectId, ref: 'category'}],

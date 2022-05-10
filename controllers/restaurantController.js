@@ -2,12 +2,8 @@ const RestaurantModel = require('../models/restaurantModel.js');
 const bcrypt = require("bcryptjs");
 const TokenModel = require("../models/tokenModel");
 const jwt = require("jsonwebtoken");
+const axios = require("axios");
 
-/**
- * restaurantController.js
- *
- * @description :: Server-side logic for managing restaurants.
- */
 module.exports = {
 
     list: function (req, res) {
@@ -201,5 +197,66 @@ module.exports = {
 
             return res.json(restaurant);
         });
+    },
+
+    update_from_api: async function (req, res) {
+        let apiUrl = 'https://serpapi.com/search.json?device=desktop&engine=google&google_domain=google.com&location=Maribor%2C+Slovenia&q=restaurant&start=0&tbm=lcl&api_key=4f8cb83d8bde30b3b6f339698dbef93339509f29a5358dcd67ea7cc250ba5dbd';
+        let run = true;
+
+        try{
+            while(run){
+                await axios.get(apiUrl).then(response => {
+                    const restaurants = response.data.local_results;
+
+                    for (let i = 0; i < restaurants.length; i++) {
+                        RestaurantModel.findOne({place_id: restaurants[i].place_id}, function (err, restaurant) {
+                            if (err) return res.status(400).send("Error while finding restaurant in database");
+
+                            if (!restaurant) {
+                                const newRestaurant = new RestaurantModel({
+                                    name: restaurants[i].title,
+                                    place_id: restaurants[i].place_id,
+                                    google_rating: restaurants[i].rating,
+                                    address: restaurants[i].address,
+                                    opening_hours: restaurants[i].opening_hours,
+                                    location: {
+                                        type: "Point",
+                                        coordinates: [restaurants[i].gps_coordinates.latitude, restaurants[i].gps_coordinates.longitude]
+                                    }
+                                });
+
+                                newRestaurant.save(function (err) {
+                                    if (err) {
+                                        return res.status(500).send("Error when creating restaurant");
+                                    }
+                                });
+                            } else {
+                                restaurant.name = restaurants[i].title ? restaurants[i].title : restaurant.name;
+                                restaurant.address = restaurants[i].address ? restaurants[i].address : restaurant.address;
+                                restaurant.opening_hours = restaurants[i].opening_hours ? restaurants[i].opening_hours : restaurant.opening_hours;
+                                restaurant.place_id = restaurants[i].place_id ? restaurants[i].place_id : restaurant.place_id;
+                                restaurant.google_rating = restaurants[i].rating ? restaurants[i].rating : restaurant.google_rating;
+                                if(restaurants[i].gps_coordinates){
+                                    restaurant.location = {
+                                        type: "Point",
+                                        coordinates: [restaurants[i].gps_coordinates.latitude, restaurants[i].gps_coordinates.longitude]
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if (response.data.serpapi_pagination.next)
+                        apiUrl = response.data.serpapi_pagination.next_link + "&api_key=4f8cb83d8bde30b3b6f339698dbef93339509f29a5358dcd67ea7cc250ba5dbd";
+                    else
+                        run=false;
+
+                });
+            }
+            return res.send("Restaurants updated");
+
+        }catch (err){
+            return res.status(400).send(err);
+        }
     }
 };
