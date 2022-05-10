@@ -62,8 +62,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-const bgUpdateRestaurants = require('../maribor-digital-twin/bgUpdateRestaurants')
-bgUpdateRestaurants.restaurantUpdate();
+
 
 
 module.exports = app;

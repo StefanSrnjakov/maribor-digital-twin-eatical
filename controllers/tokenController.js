@@ -1,10 +1,5 @@
 const TokenModel = require('../models/tokenModel.js');
 
-/**
- * tokenController.js
- *
- * @description :: Server-side logic for managing tokens.
- */
 module.exports = {
 
     list: function (req, res) {

@@ -1,17 +1,10 @@
-var OrderModel = require('../models/orderModel.js');
-var UserModel = require('../models/userModel.js');
-var RestaurantModel = require('../models/restaurantModel.js');
-var MealModel = require('../models/mealModel.js');
-/**
- * orderController.js
- *
- * @description :: Server-side logic for managing orders.
- */
+const OrderModel = require('../models/orderModel.js');
+const UserModel = require('../models/userModel.js');
+const RestaurantModel = require('../models/restaurantModel.js');
+const MealModel = require('../models/mealModel.js');
+
 module.exports = {
 
-    /**
-     * orderController.list()
-     */
     list: function (req, res) {
         OrderModel.find(function (err, orders) {
             if (err) {
@@ -25,11 +18,8 @@ module.exports = {
         });
     },
 
-    /**
-     * orderController.show()
-     */
     show: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         OrderModel.findOne({_id: id}, function (err, order) {
             if (err) {
@@ -49,11 +39,8 @@ module.exports = {
         });
     },
 
-    /**
-     * orderController.create()
-     */
     create: function (req, res) {
-        var order = new OrderModel({
+        const order = new OrderModel({
 			pick_up_time : req.body.pick_up_time,
 			order_time : req.body.order_time,
 			price : req.body.price,
@@ -89,11 +76,8 @@ module.exports = {
         });
     },
 
-    /**
-     * orderController.update()
-     */
     update: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         OrderModel.findOne({_id: id}, function (err, order) {
             if (err) {
@@ -129,11 +113,8 @@ module.exports = {
         });
     },
 
-    /**
-     * orderController.remove()
-     */
     remove: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         OrderModel.findByIdAndRemove(id, function (err, order) {
             if (err) {
@@ -147,11 +128,8 @@ module.exports = {
         });
     },
 
-    /**
-     * orderController.claim()
-     */
     claim: function (req, res){
-        UserModel.findByIdAndUpdate(req.user._id, {$push : {orders : req.params.id}}, function(err, user){
+        UserModel.findByIdAndUpdate(req.token.user_id, {$push : {orders : req.params.id}}, function(err, user){
             if(err){
                 return res.status(500).json({
                     message: 'Error when updating user',
@@ -159,7 +137,7 @@ module.exports = {
                 });
             }
         });
-        OrderModel.findByIdAndUpdate(req.params.id, {user_id : req.user._id}, function(err, order){
+        OrderModel.findByIdAndUpdate(req.params.id, {user_id : req.token.user_id}, function(err, order){
             if(err){
                 return res.status(500).json({
                     message: 'Error when updating order',
@@ -170,9 +148,6 @@ module.exports = {
         });
     },
 
-    /**
-     * orderController.complete()
-     */
     complete: function(req, res){
         req.body.completed = true;
         OrderModel.findByIdAndUpdate(req.params.id, {completed : true}, function(err, order){
