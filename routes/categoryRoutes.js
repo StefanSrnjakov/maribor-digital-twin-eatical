@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var categoryController = require('../controllers/categoryController.js');
+const express = require('express');
+const router = express.Router();
+const categoryController = require('../controllers/categoryController.js');
 
 /*
  * GET

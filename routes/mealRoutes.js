@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var mealController = require('../controllers/mealController.js');
+const express = require('express');
+const router = express.Router();
+const mealController = require('../controllers/mealController.js');
 
 /*
  * GET

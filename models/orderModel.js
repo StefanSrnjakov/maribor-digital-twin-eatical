@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema   = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema   = mongoose.Schema;
 
-var orderSchema = new Schema({
+const orderSchema = new Schema({
 	'pick_up_time' : Date,
 	'order_time' : Date,
 	'price' : Number,

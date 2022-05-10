@@ -1,15 +1,7 @@
-var ImageModel = require('../models/imageModel.js');
+const ImageModel = require('../models/imageModel.js');
 
-/**
- * imageController.js
- *
- * @description :: Server-side logic for managing images.
- */
 module.exports = {
 
-    /**
-     * imageController.list()
-     */
     list: function (req, res) {
         ImageModel.find(function (err, images) {
             if (err) {
@@ -23,11 +15,8 @@ module.exports = {
         });
     },
 
-    /**
-     * imageController.show()
-     */
     show: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         ImageModel.findOne({_id: id}, function (err, image) {
             if (err) {
@@ -47,11 +36,8 @@ module.exports = {
         });
     },
 
-    /**
-     * imageController.create()
-     */
     create: function (req, res) {
-        var image = new ImageModel({
+        const image = new ImageModel({
 			name : req.body.name,
 			description : req.body.description,
 			path : req.body.path
@@ -69,11 +55,8 @@ module.exports = {
         });
     },
 
-    /**
-     * imageController.update()
-     */
     update: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         ImageModel.findOne({_id: id}, function (err, image) {
             if (err) {
@@ -106,11 +89,8 @@ module.exports = {
         });
     },
 
-    /**
-     * imageController.remove()
-     */
     remove: function (req, res) {
-        var id = req.params.id;
+        const id = req.params.id;
 
         ImageModel.findByIdAndRemove(id, function (err, image) {
             if (err) {

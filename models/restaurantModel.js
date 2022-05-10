@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema   = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema   = mongoose.Schema;
 
-var restaurantSchema = new Schema({
+const restaurantSchema = new Schema({
 	'username' : String,
 	'password' : String,
 	'name' : String,
@@ -29,7 +29,8 @@ var restaurantSchema = new Schema({
 			required: true
 		}
 	},
+
 	'ratings' : [{type: Number}]
 });
-
+restaurantSchema.index({location: "2dsphere"});
 module.exports = mongoose.model('restaurant', restaurantSchema);

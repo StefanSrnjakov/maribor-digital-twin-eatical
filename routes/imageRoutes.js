@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var imageController = require('../controllers/imageController.js');
+const express = require('express');
+const router = express.Router();
+const imageController = require('../controllers/imageController.js');
 
 /*
  * GET

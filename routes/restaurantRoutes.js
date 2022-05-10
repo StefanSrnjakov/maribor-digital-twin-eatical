@@ -21,6 +21,7 @@ router.get('/:id', restaurantController.show);
 router.post('/', restaurantController.create);
 router.post('/login', loginValidation, restaurantController.login);
 router.post('/logout', authenticateRestaurant, restaurantController.logout);
+router.post('/update', restaurantController.update_from_api);
 /*
  * PUT
  */
