@@ -10,6 +10,7 @@ const restaurantSchema = new Schema({
 	'email' : String,
 	'telephone' : String,
 	'website' : String,
+	'directions_link' : String,
 	'orders' : [{type: Schema.Types.ObjectId, ref: 'order'}],
 	'image_id' : {
 	 	type: Schema.Types.ObjectId,

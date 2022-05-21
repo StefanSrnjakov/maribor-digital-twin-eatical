@@ -42,22 +42,22 @@ module.exports = {
 
     create: function (req, res) {
 
-    const restaurant = new RestaurantModel({
-          username : req.body.username,
-          password : req.body.password,
-          name : req.body.name,
-          address : req.body.address,
-          opening_hours : req.body.opening_hours,
-          email : req.body.email,
-          telephone : req.body.telephone,
-          website : req.body.website,
-          orders : [],
-          image_id : req.body.image_id,
-          meals : [],
-          place_id : req.body.place_id,
-          google_rating : req.body.google_rating,
-          location: req.body.location,
-          ratings : []
+        const restaurant = new RestaurantModel({
+            username: req.body.username,
+            password: req.body.password,
+            name: req.body.name,
+            address: req.body.address,
+            opening_hours: req.body.opening_hours,
+            email: req.body.email,
+            telephone: req.body.telephone,
+            website: req.body.website,
+            orders: [],
+            image_id: req.body.image_id,
+            meals: [],
+            place_id: req.body.place_id,
+            google_rating: req.body.google_rating,
+            location: req.body.location,
+            ratings: []
         });
 
         restaurant.save(function (err, restaurant) {
@@ -72,14 +72,14 @@ module.exports = {
         });
     },
 
-    login: async function (req, res){
+    login: async function (req, res) {
         //Check if the username is in the database
         const restaurant = await RestaurantModel.findOne({username: req.body.username});
-        if(!user) return res.status(400).send('Username does not exists');
+        if (!user) return res.status(400).send('Username does not exists');
 
         //Check if password is correct
         const validPassword = await bcrypt.compare(req.body.password, restaurant.password);
-        if(!validPassword) return res.status(400).send('Invalid password');
+        if (!validPassword) return res.status(400).send('Invalid password');
 
         //Create and assign a token
         const token = new TokenModel({
@@ -97,7 +97,7 @@ module.exports = {
     },
 
     logout: async function (req, res) {
-        TokenModel.findOneAndRemove({user_id: req.token.user_id}, function(err){
+        TokenModel.findOneAndRemove({user_id: req.token.user_id}, function (err) {
             if (err) return res.status(500).send('Token failed to remove');
             return res.send('Token removed');
         });
@@ -164,17 +164,17 @@ module.exports = {
         });
     },
 
-    list_nearby: function(req, res){
+    list_nearby: function (req, res) {
         RestaurantModel.find({
             location:
                 {
                     $near:
                         {
-                            $geometry: { type: "Point", coordinates: [46.5547, 15.6459] },
+                            $geometry: {type: "Point", coordinates: [46.5547, 15.6459]},
                             $maxDistance: 500
                         }
                 }
-        }, function(err, restaurants){
+        }, function (err, restaurants) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting restaurants.',
@@ -186,8 +186,8 @@ module.exports = {
         });
     },
 
-    rate: function(req, res){
-        RestaurantModel.findByIdAndUpdate(req.params.id, {$push: {ratings : req.body.rating}}, function(err, restaurant){
+    rate: function (req, res) {
+        RestaurantModel.findByIdAndUpdate(req.params.id, {$push: {ratings: req.body.rating}}, function (err, restaurant) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when updating restaurant.',
@@ -200,62 +200,79 @@ module.exports = {
     },
 
     update_from_api: async function (req, res) {
-        let apiUrl = 'https://serpapi.com/search.json?device=desktop&engine=google&google_domain=google.com&location=Maribor%2C+Slovenia&q=restaurant&start=0&tbm=lcl&api_key=4f8cb83d8bde30b3b6f339698dbef93339509f29a5358dcd67ea7cc250ba5dbd';
+
+        let apiUrl = 'https://serpapi.com/search.json?device=desktop&engine=google&google_domain=google.com&location=Maribor%2C+Slovenia&q=restaurant&start=0&tbm=lcl&api_key=8566701a4820a02d60bbec839d8d0c57fe3e789f43a1f0b53af7e841f16ba877';
         let run = true;
 
-        try{
-            while(run){
-                await axios.get(apiUrl).then(response => {
+        try {
+            while (run) {
+                await axios.get(apiUrl).then(async response => {
                     const restaurants = response.data.local_results;
-
                     for (let i = 0; i < restaurants.length; i++) {
-                        RestaurantModel.findOne({place_id: restaurants[i].place_id}, function (err, restaurant) {
-                            if (err) return res.status(400).send("Error while finding restaurant in database");
 
-                            if (!restaurant) {
-                                const newRestaurant = new RestaurantModel({
-                                    name: restaurants[i].title,
-                                    place_id: restaurants[i].place_id,
-                                    google_rating: restaurants[i].rating,
-                                    address: restaurants[i].address,
-                                    opening_hours: restaurants[i].opening_hours,
-                                    location: {
-                                        type: "Point",
-                                        coordinates: [restaurants[i].gps_coordinates.latitude, restaurants[i].gps_coordinates.longitude]
+                        await axios.get(restaurants[i].place_id_search + "&api_key=8566701a4820a02d60bbec839d8d0c57fe3e789f43a1f0b53af7e841f16ba877").then(response2 => {
+
+                            if (response2.data.local_results) {
+                                var restaurantMoreInfo = response2.data.local_results[0]
+                                RestaurantModel.findOne({place_id: restaurantMoreInfo.place_id}, function (err, restaurant) {
+                                    if (err) return res.status(400).send("Error while finding restaurant in database");
+
+                                    if (!restaurant) {
+                                        const newRestaurant = new RestaurantModel({
+                                            name: restaurantMoreInfo.title,
+                                            place_id: restaurantMoreInfo.place_id,
+                                            google_rating: restaurantMoreInfo.rating,
+                                            address: restaurantMoreInfo.address,
+                                            opening_hours: restaurantMoreInfo.opening_hours,
+                                            // website: restaurantMoreInfo.links.website ? restaurantMoreInfo.links.website : " ",
+                                            // directions_link: restaurantMoreInfo.links.directions ? restaurantMoreInfo.links.directions : " ",
+                                            location: {
+                                                type: "Point",
+                                                coordinates: [restaurantMoreInfo.gps_coordinates.latitude, restaurantMoreInfo.gps_coordinates.longitude]
+                                            }
+                                        });
+                                        newRestaurant.save(function (err) {
+                                            if (err) {
+                                                return res.status(500).send("Error when creating restaurant");
+                                            }
+                                        });
+                                    } else {
+                                        restaurant.name = restaurantMoreInfo.title ? restaurantMoreInfo.title : restaurant.name;
+                                        restaurant.address = restaurantMoreInfo.address ? restaurantMoreInfo.address : restaurant.address;
+                                        restaurant.opening_hours = restaurantMoreInfo.opening_hours ? restaurantMoreInfo.opening_hours : restaurant.opening_hours;
+                                        restaurant.place_id = restaurantMoreInfo.place_id ? restaurantMoreInfo.place_id : restaurant.place_id;
+                                        restaurant.google_rating = restaurantMoreInfo.rating ? restaurantMoreInfo.rating : restaurant.google_rating;
+                                        // restaurant.website = response2.data.local_results[0].links.website ? response2.data.local_results[0].links.website : restaurant.website;
+                                        // restaurant.directions_link = restaurantMoreInfo.links.directions ? restaurantMoreInfo.links.directions : restaurant.directions_link;
+                                        if (restaurantMoreInfo.gps_coordinates) {
+                                            restaurant.location = {
+                                                type: "Point",
+                                                coordinates: [restaurantMoreInfo.gps_coordinates.latitude, restaurantMoreInfo.gps_coordinates.longitude]
+                                            }
+                                        }
+                                        restaurant.save(function (err) {
+                                            if (err) {
+                                                return res.status(500).send("Error when creating restaurant");
+                                            }
+                                        });
                                     }
                                 });
-
-                                newRestaurant.save(function (err) {
-                                    if (err) {
-                                        return res.status(500).send("Error when creating restaurant");
-                                    }
-                                });
-                            } else {
-                                restaurant.name = restaurants[i].title ? restaurants[i].title : restaurant.name;
-                                restaurant.address = restaurants[i].address ? restaurants[i].address : restaurant.address;
-                                restaurant.opening_hours = restaurants[i].opening_hours ? restaurants[i].opening_hours : restaurant.opening_hours;
-                                restaurant.place_id = restaurants[i].place_id ? restaurants[i].place_id : restaurant.place_id;
-                                restaurant.google_rating = restaurants[i].rating ? restaurants[i].rating : restaurant.google_rating;
-                                if(restaurants[i].gps_coordinates){
-                                    restaurant.location = {
-                                        type: "Point",
-                                        coordinates: [restaurants[i].gps_coordinates.latitude, restaurants[i].gps_coordinates.longitude]
-                                    }
-                                }
                             }
                         });
+
                     }
 
                     if (response.data.serpapi_pagination.next)
-                        apiUrl = response.data.serpapi_pagination.next_link + "&api_key=4f8cb83d8bde30b3b6f339698dbef93339509f29a5358dcd67ea7cc250ba5dbd";
+                        apiUrl = response.data.serpapi_pagination.next_link + "&api_key=8566701a4820a02d60bbec839d8d0c57fe3e789f43a1f0b53af7e841f16ba877";
                     else
-                        run=false;
+                        run = false;
 
                 });
             }
             return res.send("Restaurants updated");
 
-        }catch (err){
+        } catch (err) {
+            console.log(err)
             return res.status(400).send(err);
         }
     }
