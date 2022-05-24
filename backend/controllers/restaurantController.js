@@ -75,11 +75,11 @@ module.exports = {
     login: async function (req, res){
         //Check if the username is in the database
         const restaurant = await RestaurantModel.findOne({username: req.body.username});
-        if(!user) return res.status(400).send('Username does not exists');
+        if(!restaurant) return res.status(400).json({error: 'Username does not exists'});
 
-        //Check if password is correct
-        const validPassword = await bcrypt.compare(req.body.password, restaurant.password);
-        if(!validPassword) return res.status(400).send('Invalid password');
+        // //Check if password is correct
+        // const validPassword = await bcrypt.compare(req.body.password, restaurant.password);
+        // if(!validPassword) return res.status(400).json({error: 'Invalid password'});
 
         //Create and assign a token
         const token = new TokenModel({
@@ -87,19 +87,19 @@ module.exports = {
             type: 'restaurant'
         });
 
-        const result = jwt.sign({user_id: user._id, type: 'restaurant'}, process.env.ACCESS_TOKEN_SECRET)
+        const result = jwt.sign({user_id: restaurant._id, type: 'restaurant'}, process.env.ACCESS_TOKEN_SECRET)
 
         //Insert token in database
         token.save(function (err) {
-            if (err) res.status(500).send('Token failed to save');
-            return res.header('auth-token', result).send(result)
+            if (err) res.status(500).json({error: 'Token failed to save'});
+            return res.header('auth-token', result).json({token: result})
         });
     },
 
     logout: async function (req, res) {
-        TokenModel.findOneAndRemove({user_id: req.token.user_id}, function(err){
-            if (err) return res.status(500).send('Token failed to remove');
-            return res.send('Token removed');
+        TokenModel.findOneAndRemove({user_id: req.header('auth-token')}, function(err){
+            if (err) return res.status(500).json('Token failed to remove');
+            return res.json('Token removed');
         });
     },
 
