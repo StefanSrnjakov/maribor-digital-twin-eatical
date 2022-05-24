@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Login from "./components/authentication/Login";
 import Register from "./components/authentication/Register";
 import Logout from "./components/authentication/Logout";
+import Profile from "./components/Profile";
 import {useEffect, useState } from "react";
 
 function App (){
@@ -32,6 +33,7 @@ function App (){
                         <Route exact path={"/login"} element={ <Login /> }></Route>
                         <Route exact path={"/register"} element={ <Register /> }></Route>
                         <Route exact path={"/logout"} element={ <Logout type={user.type} /> }></Route>
+                        <Route exact path={"/profile"} element={ <Profile user={user} /> }></Route>
                     </Routes>
                 </div>
             </BrowserRouter>
