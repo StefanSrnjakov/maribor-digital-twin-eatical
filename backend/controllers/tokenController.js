@@ -1,17 +1,59 @@
 const TokenModel = require('../models/tokenModel.js');
+const UserModel = require('../models/userModel.js');
+const RestaurantModel = require('../models/restaurantModel.js');
+const jwt = require("jsonwebtoken");
 
 module.exports = {
 
     list: function (req, res) {
-        TokenModel.find(function (err, tokens) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting token.',
-                    error: err
+        const token = req.header('auth-token');
+
+        if (!token) return res.json({type: 'guest'});
+
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, token) => {
+
+            if (err) return res.json({type: 'guest'});
+            if (token.type === "user") {
+                UserModel.findById(token.user_id, function (err, user) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when getting user.',
+                            error: err
+                        });
+                    }
+
+                    if (!token) {
+                        return res.status(404).json({
+                            message: 'No such user'
+                        });
+                    }
+
+                    return res.json({
+                        type: "user",
+                        user: user
+                    });
+                });
+            } else {
+                RestaurantModel.findById(token.user_id, function (err, restaurant){
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when getting restaurant.',
+                            error: err
+                        });
+                    }
+
+                    if (!token) {
+                        return res.status(404).json({
+                            message: 'No such restaurant'
+                        });
+                    }
+
+                    return res.json({
+                        type: "restaurant",
+                        user: restaurant
+                    });
                 });
             }
-
-            return res.json(tokens);
         });
     },
 

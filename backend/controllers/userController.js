@@ -71,11 +71,11 @@ module.exports = {
     register: async function (req, res){
         //Check if the email is already in the database
         const emailExist = await UserModel.findOne({email: req.body.email});
-        if(emailExist) return res.status(400).send('Email already exists');
+        if(emailExist) return res.status(400).json({error: 'Email already exists'});
 
         //Check if the username is already in the database
         const usernameExist = await UserModel.findOne({username: req.body.username});
-        if(usernameExist) return res.status(400).send('Username already exists');
+        if(usernameExist) return res.status(400).json({error: 'Username already exists'});
 
         //Password hashing
         const salt = await bcrypt.genSaltSync(10);
@@ -101,11 +101,12 @@ module.exports = {
     login: async function (req, res){
         //Check if the username is in the database
         const user = await UserModel.findOne({username: req.body.username});
-        if(!user) return res.status(400).send('Username does not exists');
+        if(!user) {console.log("neakj");
+            return res.status(400).json({error: 'Username does not exists'});}
 
         //Check if password is correct
         const validPassword = await bcrypt.compare(req.body.password, user.password);
-        if(!validPassword) return res.status(400).send('Invalid password');
+        if(!validPassword) return res.status(400).json({error: 'Invalid password'});
 
         //Create and assign a token
         const token = new TokenModel({
@@ -117,15 +118,15 @@ module.exports = {
 
         //Insert token in database
         token.save(function (err) {
-            if (err) res.status(500).send('Token failed to save');
-            return res.header('auth-token', result).send(result)
+            if (err) res.status(500).json({error: 'Token failed to save'});
+            return res.header('auth-token', result).json({token: result})
         });
     },
 
     logout: async function (req, res) {
-        TokenModel.findOneAndRemove({user_id: req.token.user_id}, function(err){
-            if (err) return res.status(500).send('Token failed to remove');
-            return res.send('Token removed');
+        TokenModel.findOneAndRemove({user_id: req.header('auth-token')}, function(err){
+            if (err) return res.status(500).json('Token failed to remove');
+            return res.json('Token removed');
         });
     },
 
