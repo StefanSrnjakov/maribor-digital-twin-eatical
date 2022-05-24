@@ -1,44 +1,46 @@
+import './App.css';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {AccountContext} from "./AccountContext";
 import Header from "./components/Header";
 import Login from "./components/authentication/Login";
 import Register from "./components/authentication/Register";
 import Logout from "./components/authentication/Logout";
 import Profile from "./components/Profile";
-import {useEffect, useState } from "react";
+import {useEffect, useState} from "react";
+import Meals from "./components/restaurant/Meals"
+import Orders from "./components/restaurant/Orders";
+import MyOrders from "./components/users/MyOrders";
 
-function App (){
-    const [user, setUser] = useState('');
+function App() {
 
-    useEffect( function () {
-        const authenticate = async function() {
-            const res = await fetch('http://localhost:5000/token', {
-                method: 'GET',
-                credentials: 'include',
-                headers: {'auth-token': localStorage.getItem('token')},
-            });
+    const [account, setAccount] = useState(localStorage.account ? JSON.parse(localStorage.account) : null);
 
-            const data = await res.json();
-            setUser(data);
-        }
-        authenticate();
-    }, []);
+    const update = (accountInfo) => {
+        localStorage.setItem("account", JSON.stringify(accountInfo));
+        setAccount(accountInfo);
+    }
 
-
-        return (
-            <BrowserRouter>
+    return (<BrowserRouter>
+            <AccountContext.Provider value={{
+                account: account, update: update
+            }}>
                 <div className="App">
-                    <Header type={user.type} />
+                    <Header/>
                     <Routes>
-                        <Route exact path={"/"} ></Route>
-                        <Route exact path={"/login"} element={ <Login /> }></Route>
-                        <Route exact path={"/register"} element={ <Register /> }></Route>
-                        <Route exact path={"/logout"} element={ <Logout type={user.type} /> }></Route>
-                        <Route exact path={"/profile"} element={ <Profile user={user} /> }></Route>
+                        <Route exact path={"/"}></Route>
+                        <Route exact path={"/login"} element={<Login/>}></Route>
+                        <Route exact path={"/register"} element={<Register/>}></Route>
+                        <Route exact path={"/logout"} element={<Logout/>}></Route>
+                        <Route exact path={"/profile"} element={<Profile/>}></Route>
+                        <Route path="/restaurant/meals" exact element={<Meals/>}></Route>{/*TODO id-TO*/}
+                        <Route path="/restaurant/orders" exact element={<Orders/>}></Route>{/*TODO id-TO*/}
+                        <Route path="/user/orders" exact element={<MyOrders/>}></Route>{/*TODO id-TO*/}
                     </Routes>
                 </div>
-            </BrowserRouter>
+            </AccountContext.Provider>
+        </BrowserRouter>
 
-        );
+    );
 }
 
 export default App;

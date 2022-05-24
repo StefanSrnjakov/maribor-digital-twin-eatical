@@ -1,4 +1,5 @@
 const MealModel = require('../models/mealModel.js');
+const RestaurantModel = require('../models/restaurantModel.js');
 
 module.exports = {
 
@@ -54,7 +55,25 @@ module.exports = {
                 });
             }
 
-            return res.status(201).json(meal);
+            RestaurantModel.findById(req.body.restaurant_id, function (err, restaurant) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when creating meal',
+                        error: err
+                    });
+                }
+                restaurant.meals.push(meal._id);
+                restaurant.save(function (err, meal) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when updating meal.',
+                            error: err
+                        });
+                    }
+
+                    return res.json(meal);
+                });
+            });
         });
     },
 
@@ -106,7 +125,36 @@ module.exports = {
                 });
             }
 
-            return res.status(204).json();
+            RestaurantModel.findById(meal.restaurant_id, function (err, restaurant){
+                if(err){
+                    return res.status(500).json({
+                        message: 'Error when deleting the meal.',
+                        error: err
+                    });
+                }
+                if(!restaurant){
+                    return res.status(500).json({
+                        message: 'Error when deleting the meal.',
+                        error: err
+                    });
+                }
+
+                const index = restaurant.meals.indexOf(meal._id);
+                if (index > -1) {
+                    restaurant.meals.splice(index, 1); // 2nd parameter means remove one item only
+
+                    restaurant.save(function (err, meal) {
+                        if (err) {
+                            return res.status(500).json({
+                                message: 'Error when updating meal.',
+                                error: err
+                            });
+                        }
+
+                        return res.status(204).json();
+                    });
+                }
+            })
         });
     }
 };
