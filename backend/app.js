@@ -28,6 +28,21 @@ const userRouter = require('./routes/userRoutes')
 
 const app = express();
 
+var cors = require('cors'); //API bo na port 3001, react bo na 3000, rabimo cors za komunikacijo
+var allowedOrigins = ['http://localhost:5000', 'http://localhost:5001', 'http://localhost:3000'];
+app.use(cors({
+  credentials: true,
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = "The CORS policy for this site does not allow access from the specified Origin.";
+      return callback(new Error(msg), false);
+    } return callback(null, true);
+  }
+}));
+
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');

@@ -22,7 +22,32 @@ module.exports = {
     show: function (req, res) {
         const id = req.params.id;
 
-        RestaurantModel.findOne({_id: id}, function (err, restaurant) {
+        RestaurantModel.findOne({_id: id})
+            .populate({
+                path: 'meals',
+                populate: {
+                    path: 'category'
+                }
+            })
+            .populate({
+                path: 'meals',
+                populate: {
+                    path: 'allergens'
+                }
+            })
+            .populate({
+                path: 'orders',
+                populate: {
+                    path: 'meal_id',
+                }
+            })
+            .populate({
+                path: 'orders',
+                populate: {
+                    path: 'user_id',
+                }
+            })
+            .exec( function (err, restaurant) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting restaurant.',
