@@ -26,7 +26,17 @@ module.exports = {
     show: function (req, res) {
         const id = req.params.id;
 
-        UserModel.findOne({_id: id}, function (err, user) {
+        UserModel.findOne({_id: id})
+            .populate({
+                path: 'orders',
+                populate: {
+                    path: 'meal_id',
+                    populate:{
+                        path: 'restaurant_id'
+                    }
+                }
+            })
+            .exec(function (err, user) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting user.',
@@ -105,8 +115,8 @@ module.exports = {
             return res.status(400).json({error: 'Username does not exists'});}
 
         //Check if password is correct
-        const validPassword = await bcrypt.compare(req.body.password, user.password);
-        if(!validPassword) return res.status(400).json({error: 'Invalid password'});
+        // const validPassword = await bcrypt.compare(req.body.password, user.password);
+        // if(!validPassword) return res.status(400).json({error: 'Invalid password'});
 
         //Create and assign a token
         const token = new TokenModel({
@@ -117,15 +127,18 @@ module.exports = {
         const result = jwt.sign({user_id: user._id, type: 'user'}, process.env.ACCESS_TOKEN_SECRET)
 
         //Insert token in database
-        token.save(function (err) {
+        token.save(function (err, mongoUser) {
             if (err) res.status(500).json({error: 'Token failed to save'});
-            return res.header('auth-token', result).json({token: result})
+            return res.header('auth-token', result).json({id: mongoUser._id, token: result, user: user})
         });
     },
 
     logout: async function (req, res) {
-        TokenModel.findOneAndRemove({user_id: req.header('auth-token')}, function(err){
+        console.log(req.body.id)
+
+        TokenModel.findByIdAndRemove(req.body.id, function(err, token){
             if (err) return res.status(500).json('Token failed to remove');
+            if (!token) return res.json('Token does not exist');
             return res.json('Token removed');
         });
     },

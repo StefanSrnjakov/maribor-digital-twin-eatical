@@ -1,30 +1,38 @@
-import React, { useState } from "react";
+import {AccountContext} from "../AccountContext";
 
-function Profile (props){
-
-    if(props.user.type === "user") return (
+function Profile() {
+    return (
         <>
             <h2>Profile</h2>
-            <p><b>Name: </b>{props.user.user.name}</p>
-            <p><b>Surname: </b>{props.user.user.surname}</p>
-            <p><b>Email: </b>{props.user.user.email}</p>
-            <p><b>Username: </b>{props.user.user.username}</p>
-            <p><b>Telephone: </b>{props.user.user.telephone}</p>
-            <p><b>Number of orders: </b>{props.user.user.orders.length}</p>
+
+            <AccountContext.Consumer>
+                {context => (
+                    <>
+                        {context.account.user &&
+                            <>
+                                <p><b>Name: </b>{context.account.user.name}</p>
+                                <p><b>Surname: </b>{context.account.user.surname}</p>
+                                <p><b>Email: </b>{context.account.user.email}</p>
+                                <p><b>Username: </b>{context.account.user.username}</p>
+                                <p><b>Telephone: </b>{context.account.user.telephone}</p>
+                                <p><b>Number of orders: </b>{context.account.user.orders.length}</p>
+                            </>
+                        }
+                        {context.account.restaurant &&
+                            <>
+                                <p><b>Name: </b>{context.account.restaurant.name}</p>
+                                <p><b>Address: </b>{context.account.restaurant.address}</p>
+                                <p><b>Google rating: </b>{context.account.restaurant.google_rating}</p>
+                                <p><b>Username: </b>{context.account.restaurant.username}</p>
+                                <p><b>Number of meals: </b>{context.account.restaurant.meals.length}</p>
+                                <p><b>Number of orders: </b>{context.account.restaurant.orders.length}</p>
+                            </>
+                        }
+                    </>
+                )}
+            </AccountContext.Consumer>
         </>
-    );
-    else if(props.user.type === "restaurant") return (
-        <>
-            <h2>Profile</h2>
-            <p><b>Name: </b>{props.user.user.name}</p>
-            <p><b>Address: </b>{props.user.user.address}</p>
-            <p><b>Google rating: </b>{props.user.user.google_rating}</p>
-            <p><b>Username: </b>{props.user.user.username}</p>
-            <p><b>Number of meals: </b>{props.user.user.meals.length}</p>
-            <p><b>Number of orders: </b>{props.user.user.orders.length}</p>
-        </>
-    );
-    else window.location.href="/";
+    )
 
 
 }
