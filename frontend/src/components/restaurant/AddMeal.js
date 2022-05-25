@@ -1,6 +1,6 @@
-import {useState, useEffect} from 'react';
-import {Route, Routes} from "react-router-dom";
-import {useParams} from "react-router";
+import React, {useState, useEffect} from 'react';
+import {useContext} from "react";
+import {AccountContext} from "../../AccountContext";
 
 
 function AddMeal(props) {
@@ -11,8 +11,7 @@ function AddMeal(props) {
     const [title, setTitle] = useState("");
     const [size, setSize] = useState("");
     const [price, setPrice] = useState(0);
-    const {restaurantId} = useParams();
-
+    const restaurantId = useContext(AccountContext).account.restaurant._id;
 
     useEffect(function () {
         const getAllergens = async function () {

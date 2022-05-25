@@ -1,14 +1,14 @@
-import {useState, useEffect} from 'react';
-import {useParams} from "react-router";
-import {Route, Routes} from "react-router-dom";
+import React, {useState, useEffect} from 'react';
 import Order from "./Order";
+import {useContext} from "react";
+import {AccountContext} from "../../AccountContext";
 
 
-function Orders() {
+function Orders(props) {
     const [orders, setOrders] = useState([]);
     const [restaurant, setRestaurant] = useState();
     const [isLoaded, setIsLoaded] = useState(false);
-    const {id} = useParams();
+    const id = useContext(AccountContext).account.restaurant._id;
 
 
     const getRestaurant = async function () {
@@ -27,27 +27,27 @@ function Orders() {
         getRestaurant();
     }
 
-    return (
-        <div className="container"
-             style={{backgroundColor: "white", padding: "20px", marginTop: "30px", borderRadius: "10px"}}>
-            {isLoaded === true && <span style={{textAlign: "left"}}><h3>{restaurant.name}</h3></span>}
-            <div className="container-md">
-                <span className="btn btn-success">Active: </span>
+    return (<div className="container"
+                 style={{backgroundColor: "white", padding: "20px", marginTop: "30px", borderRadius: "10px"}}>
+        {isLoaded === true && <span style={{textAlign: "left"}}><h3>{restaurant.name}</h3></span>}
+        <div className="container-md">
+            <span className="btn btn-success">Active: </span>
 
-                {orders.map(order => (order.completed === true && (<Order useFor="restaurant" restaurantName={restaurant.name}
-                                                                          refreshRestaurant={(e) => (refreshRestaurant())}
-                                                                          order={order} key={order._id}></Order>)))}
+            {orders.map(order => (order.completed === true && (
+                <Order useFor="restaurant" restaurantName={restaurant.name}
+                       refreshRestaurant={(e) => (refreshRestaurant())}
+                       order={order} key={order._id}></Order>)))}
 
-            </div>
-            <div className="container-md" style={{border:"solid 5px whitesmoke", borderRadius:"15px"}}>
-                <span className="btn btn-secondary">Completed: </span>
-                {orders.map(order => (order.completed === false && (<Order useFor="restaurant" restaurantName={restaurant.name}
-                                                                           refreshRestaurant={(e) => (refreshRestaurant())}
-                                                                           order={order} key={order._id}></Order>)))}
-
-            </div>
         </div>
-    );
+        <div className="container-md" style={{border: "solid 5px whitesmoke", borderRadius: "15px"}}>
+            <span className="btn btn-secondary">Completed: </span>
+            {orders.map(order => (order.completed === false && (
+                <Order useFor="restaurant" restaurantName={restaurant.name}
+                       refreshRestaurant={(e) => (refreshRestaurant())}
+                       order={order} key={order._id}></Order>)))}
+
+        </div>
+    </div>);
 }
 
 export default Orders;

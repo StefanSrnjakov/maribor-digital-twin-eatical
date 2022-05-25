@@ -1,14 +1,14 @@
-import {useState, useEffect} from 'react';
-import {useParams} from "react-router";
-import {Route, Routes} from "react-router-dom";
+import React, {useState, useEffect} from 'react';
 import Order from "../restaurant/Order";
+import {useContext} from "react";
+import {AccountContext} from "../../AccountContext";
 
 
-function MyOrders() {
+function MyOrders(props) {
     const [myOrders, setMyOrders] = useState([]);
     const [user, setUser] = useState();
     const [isLoaded, setIsLoaded] = useState(false);
-    const {id} = useParams();
+    const id = useContext(AccountContext).account.user._id;
 
 
     const getUser = async function () {
@@ -35,15 +35,15 @@ function MyOrders() {
                 <span className="btn btn-success">Active: </span>
 
                 {myOrders.map(order => (order.completed === true && (<Order useFor="user" userName={user.name}
-                                                                          refreshUser={(e) => (refreshUser())}
-                                                                          order={order} key={order._id}></Order>)))}
+                                                                            refreshUser={(e) => (refreshUser())}
+                                                                            order={order} key={order._id}></Order>)))}
 
             </div>
             <div className="container-md" style={{border:"solid 5px whitesmoke", borderRadius:"15px"}}>
                 <span className="btn btn-secondary">Completed: </span>
                 {myOrders.map(order => (order.completed === false && (<Order useFor="user" restaurantName={order.meal_id.restaurant_id.name} userName={user.name}
-                                                                           refreshUser={(e) => (refreshUser())}
-                                                                           order={order} key={order._id}></Order>)))}
+                                                                             refreshUser={(e) => (refreshUser())}
+                                                                             order={order} key={order._id}></Order>)))}
 
             </div>
         </div>

@@ -7,13 +7,13 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 
-
 //MONGOOSE
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_CONNECT, () => console.log('Connected to database!'));
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, "MongoDB connection error."));
+
 
 
 const indexRouter = require('./routes/index');
@@ -24,23 +24,25 @@ const mealRouter = require('./routes/mealRoutes')
 const orderRouter = require('./routes/orderRoutes')
 const restaurantRouter = require('./routes/restaurantRoutes')
 const userRouter = require('./routes/userRoutes')
+const tokenRouter = require('./routes/tokenRoutes')
 
 
 const app = express();
 
-var cors = require('cors'); //API bo na port 3001, react bo na 3000, rabimo cors za komunikacijo
-var allowedOrigins = ['http://localhost:5000', 'http://localhost:5001', 'http://localhost:3000'];
+//CORS
+const cors = require('cors');
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:5000'];
 app.use(cors({
   credentials: true,
-  origin: function(origin, callback){
+  origin: function (origin, callback) {
     if(!origin) return callback(null, true);
     if(allowedOrigins.indexOf(origin) === -1){
-      var msg = "The CORS policy for this site does not allow access from the specified Origin.";
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
-    } return callback(null, true);
+    }
+    return callback(null, true);
   }
 }));
-
 
 
 // view engine setup
@@ -61,6 +63,7 @@ app.use('/meal', mealRouter)
 app.use('/order', orderRouter)
 app.use('/restaurant', restaurantRouter)
 app.use('/user', userRouter)
+app.use('/token', tokenRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,15 +1,8 @@
-import {Link, Navigate} from "react-router-dom";
-import {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import Meal from "./Meal";
 function Order(props) {
     const [order, setOrder] = useState(props.order);
 
-    async function deleteOrderHandler(e) {
-        const res = await fetch("http://localhost:5000/order/" + order._id, {
-            method: "DELETE"
-        });
-        props.refreshRestaurant();
-    }
 
 
     return (
@@ -20,7 +13,7 @@ function Order(props) {
                     {props.useFor==="user" && (<span style={{fontSize: "25px"}}>{props.restaurantName}</span>)}
                 </div>
                 <div className="col-6" style={{textAlign: "right"}}>
-                    {props.useFor==="restaurant" && (<span style={{fontSize: "25px"}}> "ceko(TODO)" </span>)} {/*TODO*/}
+                    {props.useFor==="restaurant" && (<span style={{fontSize: "25px"}}> {props.order.user_id.name} </span>)} {/*TODO*/}
                 </div>
             </div>
             <Meal meal={order.meal_id}></Meal>
