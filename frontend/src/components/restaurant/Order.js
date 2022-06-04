@@ -6,7 +6,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
 function Order(props) {
     const [order, setOrder] = useState(props.order);
-
+    const promenliva = "";
     async function handleOrder(e) {
 
         const data = {
