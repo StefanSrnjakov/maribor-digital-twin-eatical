@@ -1,10 +1,8 @@
-import { useState } from 'react';
-
 function Meal(props) {
-    const [meal, setMeal] = useState(props.meal);
+    const meal = props.meal;
 
-    async function deleteMealHandler(e) {
-        const res = await fetch("http://localhost:5000/meal/" + meal._id, {
+    async function deleteMealHandler() {
+        await fetch("http://localhost:5000/meal/" + meal._id, {
             method: "DELETE"
         });
         props.refreshRestaurant();

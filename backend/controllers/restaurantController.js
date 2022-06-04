@@ -103,8 +103,11 @@ module.exports = {
         if(!restaurant) return res.status(400).json({error: 'Username does not exists'});
 
         // //Check if password is correct
-        // const validPassword = await bcrypt.compare(req.body.password, restaurant.password);
-        // if(!validPassword) return res.status(400).json({error: 'Invalid password'});
+        const validPassword = await bcrypt.compare(req.body.password, restaurant.password);
+        console.log(validPassword)
+        console.log(req.body.password)
+        console.log(restaurant.password)
+        if(!validPassword) return res.status(400).json({error: 'Invalid password'});
 
         //Create and assign a token
         const token = new TokenModel({
