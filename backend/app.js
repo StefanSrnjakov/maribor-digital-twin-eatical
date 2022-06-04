@@ -31,7 +31,7 @@ const app = express();
 
 //CORS
 const cors = require('cors');
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:5000'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:5000', 'https://eatical.herokuapp.com'];
 app.use(cors({
   credentials: true,
   origin: function (origin, callback) {

@@ -6,9 +6,10 @@ import Login from "./components/authentication/Login";
 import Register from "./components/authentication/Register";
 import Logout from "./components/authentication/Logout";
 import Profile from "./components/Profile";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Meals from "./components/restaurant/Meals"
 import Orders from "./components/restaurant/Orders";
+import Restaurants from "./components/restaurant/Restaurants";
 import MyOrders from "./components/users/MyOrders";
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
                         <Route exact path={"/register"} element={<Register/>}></Route>
                         <Route exact path={"/logout"} element={<Logout/>}></Route>
                         <Route exact path={"/profile"} element={<Profile/>}></Route>
+                        <Route path="/restaurant" exact element={<Restaurants />}></Route>
                         <Route path="/restaurant/meals" exact element={<Meals/>}></Route>{/*TODO id-TO*/}
                         <Route path="/restaurant/orders" exact element={<Orders/>}></Route>{/*TODO id-TO*/}
                         <Route path="/user/orders" exact element={<MyOrders/>}></Route>{/*TODO id-TO*/}
