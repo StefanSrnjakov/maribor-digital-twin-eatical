@@ -10,10 +10,10 @@ function Orders(props) {
     const [isLoaded, setIsLoaded] = useState(false);
     const id = useContext(AccountContext).account.restaurant._id;
 
-
     const getRestaurant = async function () {
         const res = await fetch("http://localhost:5000/restaurant/" + id);
         const data = await res.json();
+
         setOrders(data.orders);
         setRestaurant(data);
         setIsLoaded(true);
@@ -33,18 +33,18 @@ function Orders(props) {
         <div className="container-md">
             <span className="btn btn-success">Active: </span>
 
-            {orders.map(order => (order.completed === true && (
-                <Order useFor="restaurant" restaurantName={restaurant.name}
+            {orders.map(order => (order.completed === false && (
+                <div key={order._id}><Order isCompleted = "false" useFor="restaurant" isActive="true" restaurantName={restaurant.name}
                        refreshRestaurant={(e) => (refreshRestaurant())}
-                       order={order} key={order._id}></Order>)))}
+                            order={order} ></Order></div>)))}
 
         </div>
-        <div className="container-md" style={{border: "solid 5px whitesmoke", borderRadius: "15px"}}>
+        <div className="container-md"  style={{border: "solid 5px whitesmoke", borderRadius: "15px"}}>
             <span className="btn btn-secondary">Completed: </span>
-            {orders.map(order => (order.completed === false && (
-                <Order useFor="restaurant" restaurantName={restaurant.name}
+            {orders.map(order => (order.completed === true && (
+                <div key={order._id}><Order useFor="restaurant" isCompleted="true"  restaurantName={restaurant.name}
                        refreshRestaurant={(e) => (refreshRestaurant())}
-                       order={order} key={order._id}></Order>)))}
+                       order={order} ></Order></div>)))}
 
         </div>
     </div>);
