@@ -6,7 +6,7 @@ const MealModel = require('../models/mealModel.js');
 module.exports = {
 
     list: function (req, res) {
-        OrderModel.find(function (err, orders) {
+        OrderModel.find().sort({pick_up_time:'desc'}).exec((err, orders) => {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting order.',

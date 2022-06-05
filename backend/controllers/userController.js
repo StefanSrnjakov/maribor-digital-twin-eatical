@@ -29,13 +29,15 @@ module.exports = {
         UserModel.findOne({_id: id})
             .populate({
                 path: 'orders',
+                options: { sort: { 'pick_up_time': -1 } },
                 populate: {
                     path: 'meal_id',
                     populate:{
-                        path: 'restaurant_id'
+                        path: 'restaurant_id allergens category'
                     }
                 }
             })
+
             .exec(function (err, user) {
             if (err) {
                 return res.status(500).json({

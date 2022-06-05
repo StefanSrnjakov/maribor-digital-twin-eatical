@@ -3,10 +3,12 @@ import Meal from "./Meal";
 import Moment from 'moment'
 import IconButton from '@mui/material/IconButton';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import {Link} from "@mui/material";
+import Chip from '@mui/material/Chip';
+import FaceIcon from '@mui/icons-material/Face';
 
 function Order(props) {
     const [order, setOrder] = useState(props.order);
-    const promenliva = "";
     async function handleOrder(e) {
 
         const data = {
@@ -24,14 +26,13 @@ function Order(props) {
 
     return (
         <div className="container"
-             style={{margin: "10px", padding: "10px", border: "solid 2px whitesmoke", borderRadius: "10px"}}>
-            <div className="row">
-                <div className="col-6" style={{textAlign: "left"}}>
-                    {props.useFor === "user" && (<span style={{fontSize: "25px"}}>{props.restaurantName}</span>)}
-                </div>
-                <div className="col-6" style={{textAlign: "right"}}>
+             style={{margin: "10px", paddingLeft: "10px", paddingRight: "10px", border: "solid 3px whitesmoke", borderRadius: "10px"}}>
+            <div className="row" style={{textAlign: "right",borderTopLeftRadius:"10px", borderTopRightRadius:"10px"}}>
+                <div >
+                    {props.useFor === "user" && (<span style={{fontSize: "25px", margin:"5px"}}><Link underline="hover" href={"/user/restaurant/"+order.meal_id.restaurant_id._id}>{order.meal_id.restaurant_id.name}</Link></span>)}
+
                     {props.useFor === "restaurant" && (<span
-                        style={{fontSize: "25px"}}> {props.isCompleted === "true" && props.order.user_id.name} </span>)}
+                        style={{fontSize: "25px"}}>{order.completed && <Chip style={{fontSize:"20px"}} icon={<FaceIcon fontSize={"large"}/>} label={ props.order.user_id.name} />} </span>)}
                 </div>
             </div>
             <Meal meal={order.meal_id}></Meal>

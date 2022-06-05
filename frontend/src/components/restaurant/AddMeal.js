@@ -93,7 +93,7 @@ function AddMeal(props) {
                     </div>
                     <div className="col-4" style={{textAlign: "right"}}>
                         <div style={{margin: "15px"}}>
-                            {categories.lenth !== 0 && categories.map(category => (
+                            {categories.length !== 0 && categories.map(category => (
                                 <span key={category._id} style={{marginLeft: "5px"}}>
                                     <input onChange={handleCheckCategory} type="checkbox" className="btn-check"
                                            name={category._id}

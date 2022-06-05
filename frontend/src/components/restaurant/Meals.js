@@ -3,6 +3,7 @@ import Meal from "./Meal";
 import AddMeal from "./AddMeal";
 import {useContext} from "react";
 import {AccountContext} from "../../AccountContext";
+import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined';
 
 
 function Meals() {
@@ -107,7 +108,7 @@ function Meals() {
                                     id={meal._id}
                                     autoComplete="off" style={{display: "inline"}}></input>
                             <label style={{marginLeft: "5px"}} className="btn btn-outline-success"
-                                   htmlFor={meal._id}>select</label>
+                                   htmlFor={meal._id}><AddTaskOutlinedIcon/></label>
                             {/*order up to*/}
                             {/*                        pick up time*/}
                         </div>}

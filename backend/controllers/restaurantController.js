@@ -46,6 +46,7 @@ module.exports = {
             })
             .populate({
                 path: 'orders',
+                options: { sort: { 'pick_up_time': -1 } },
                 populate: {
                     path: 'meal_id',
                     populate: {
@@ -55,6 +56,7 @@ module.exports = {
             })
             .populate({
                 path: 'orders',
+                options: { sort: { 'pick_up_time': -1 } },
                 populate: {
                     path: 'meal_id',
                     populate: {
@@ -64,6 +66,7 @@ module.exports = {
             })
             .populate({
                 path: 'orders',
+                options: { sort: { 'pick_up_time': -1 } },
                 populate: {
                     path: 'user_id',
                 }
