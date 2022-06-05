@@ -32,7 +32,7 @@ function Order(props) {
                     {props.useFor === "user" && (<span style={{fontSize: "25px", margin:"5px"}}><Link underline="hover" href={"/user/restaurant/"+order.meal_id.restaurant_id._id}>{order.meal_id.restaurant_id.name}</Link></span>)}
 
                     {props.useFor === "restaurant" && (<span
-                        style={{fontSize: "25px"}}>{order.completed && <Chip style={{fontSize:"20px"}} icon={<FaceIcon fontSize={"large"}/>} label={ props.order.user_id.name} />} </span>)}
+                        style={{fontSize: "25px"}}>{order.completed && <Chip style={{fontSize:"20px"}} icon={<FaceIcon fontSize={"large"}/>} label={ order.user_id.name} />} </span>)}
                 </div>
             </div>
             <Meal meal={order.meal_id}></Meal>

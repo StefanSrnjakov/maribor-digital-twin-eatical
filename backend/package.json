@@ -27,6 +27,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.2",
     "morgan": "~1.9.1",
+    "node-fetch": "^3.2.5",
     "puppeteer": "^14.2.0",
     "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin-stealth": "^2.9.0",

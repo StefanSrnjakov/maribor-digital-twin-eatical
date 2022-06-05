@@ -36,6 +36,7 @@ module.exports = {
                     }
                 }
             })
+
             .exec(function (err, user) {
             if (err) {
                 return res.status(500).json({

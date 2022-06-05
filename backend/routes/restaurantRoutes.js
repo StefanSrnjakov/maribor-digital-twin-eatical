@@ -4,6 +4,7 @@ const restaurantController = require('../controllers/restaurantController.js');
 const {authenticateRestaurant, authenticateAdmin} = require("../middleware/authentication");
 const {loginValidation} = require("../middleware/validation");
 
+
 /*
  * GET
  */

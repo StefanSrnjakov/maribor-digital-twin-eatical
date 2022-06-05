@@ -7,8 +7,8 @@ import LoginIcon from '@mui/icons-material/Login';
 
 function Header() {
     return (<header>
-        <nav className={"navbar navbar-expand-lg bg-light"}>
-            <div className="container-fluid">
+        <nav className={"navbar navbar-expand-lg bg-light"} color={"white"} >
+            <div className="container-fluid" style={{backgroundColor:"#7E5A9B"}} >
                 {/*Logo*/}
                 <Link className="navbar-brand" to='#'>Eatical</Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -16,7 +16,7 @@ function Header() {
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                <div className="collapse navbar-collapse" id="navbarSupportedContent" >
                     <AccountContext.Consumer>
                         {context => (<>
                                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">

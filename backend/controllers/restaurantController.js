@@ -12,19 +12,22 @@ const {response} = require("express");
 const request = require("request");
 const fs = require("fs");
 
+
 module.exports = {
 
     list: function (req, res) {
-        RestaurantModel.find(function (err, restaurants) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting restaurant.',
-                    error: err
-                });
-            }
+        RestaurantModel.find()
+            .populate("image_id")
+            .exec(function (err, restaurants) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when getting restaurant.',
+                        error: err
+                    });
+                }
 
-            return res.json(restaurants);
-        });
+                return res.json(restaurants);
+            });
     },
 
     show: function (req, res) {
@@ -44,7 +47,7 @@ module.exports = {
             })
             .populate({
                 path: 'orders',
-                options: { sort: { 'pick_up_time': -1 } },
+                options: {sort: {'pick_up_time': -1}},
                 populate: {
                     path: 'meal_id',
                     populate: {
@@ -54,7 +57,7 @@ module.exports = {
             })
             .populate({
                 path: 'orders',
-                options: { sort: { 'pick_up_time': -1 } },
+                options: {sort: {'pick_up_time': -1}},
                 populate: {
                     path: 'meal_id',
                     populate: {
@@ -64,7 +67,7 @@ module.exports = {
             })
             .populate({
                 path: 'orders',
-                options: { sort: { 'pick_up_time': -1 } },
+                options: {sort: {'pick_up_time': -1}},
                 populate: {
                     path: 'user_id',
                 }
@@ -122,14 +125,14 @@ module.exports = {
     login: async function (req, res) {
         //Check if the username is in the database
         const restaurant = await RestaurantModel.findOne({username: req.body.username});
-        if(!restaurant) return res.status(400).json({error: 'Username does not exists'});
+        if (!restaurant) return res.status(400).json({error: 'Username does not exists'});
 
         // //Check if password is correct
         const validPassword = await bcrypt.compare(req.body.password, restaurant.password);
         console.log(validPassword)
         console.log(req.body.password)
         console.log(restaurant.password)
-        if(!validPassword) return res.status(400).json({error: 'Invalid password'});
+        if (!validPassword) return res.status(400).json({error: 'Invalid password'});
 
         //Create and assign a token
         const token = new TokenModel({
@@ -149,7 +152,7 @@ module.exports = {
     logout: async function (req, res) {
         console.log(req.body.id)
 
-        TokenModel.findByIdAndRemove(req.body.id, function(err, token){
+        TokenModel.findByIdAndRemove(req.body.id, function (err, token) {
             console.log(token)
             if (err) return res.status(500).json('Token failed to remove');
             if (!token) res.json('Token does not exist');
@@ -218,30 +221,32 @@ module.exports = {
         });
     },
 
-    list_nearby: function(req, res) {
+    list_nearby: function (req, res) {
         RestaurantModel.find({
             location:
                 {
                     $near:
                         {
-                            $geometry: { type: "Point", coordinates: [46.5547, 15.6459] },
+                            $geometry: {type: "Point", coordinates: [46.5547, 15.6459]},
                             $maxDistance: 500
                         }
                 }
-        }, function(err, restaurants){
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting restaurants.',
-                    error: err
-                });
-            }
+        })
+            .populate("image_id")
+            .exec(function (err, restaurants) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when getting restaurants.',
+                        error: err
+                    });
+                }
 
-            return res.json(restaurants);
-        });
+                return res.json(restaurants);
+            });
     },
 
-    rate: function(req, res){
-        RestaurantModel.findByIdAndUpdate(req.params.id, {$push: {ratings : req.body.rating}}, function(err, restaurant){
+    rate: function (req, res) {
+        RestaurantModel.findByIdAndUpdate(req.params.id, {$push: {ratings: req.body.rating}}, function (err, restaurant) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when updating restaurant.',
@@ -254,7 +259,6 @@ module.exports = {
     },
 
     refreshRestaurants: async function (req, res) {
-
         puppeteer.use(StealthPlugin());
 
         var url = "https://www.tripadvisor.com/Restaurants-g274874-oa1-Maribor_Styria_Region.html";
@@ -263,6 +267,7 @@ module.exports = {
 
         await puppeteer.launch({headless: true}).then(async browser => {
             const page = await browser.newPage();
+
             for (let counter = 1; counter <= 5; counter++) {
                 await page.goto(url);
                 await page.waitForTimeout(500)
@@ -278,6 +283,35 @@ module.exports = {
 
 
             for (let i = 0; i < detailedRestaurantsUrl.length; i++) {
+
+                const addRestaurant = function await () {
+                    RestaurantModel.findOne({name: restaurant.name}).exec(function (err, restaurantMongo) {
+                        if (err) {
+                            return res.status(500).json({
+                                message: 'Error when getting restaurant.',
+                                error: err
+                            });
+                        }
+                        if (!restaurantMongo) {
+                            axios.post("http://localhost:5000/restaurant", restaurant).then((response) => {
+                                console.log("restaurant saved");
+                            }, (error) => {
+                                console.log(error);
+                            });
+                        } else {
+                            axios.put("http://localhost:5000/restaurant/" + restaurantMongo._id, restaurant).then((response) => {
+                                console.log("restaurant updated");
+                            }, (error) => {
+                                console.log(error);
+                            });
+                        }
+
+                    });
+                };
+
+
+
+
                 await page.goto("https://www.tripadvisor.com" + detailedRestaurantsUrl[i]);
                 await page.waitForTimeout(1000)
                 const html = await page.content();
@@ -293,13 +327,12 @@ module.exports = {
                 restaurant.website = basicData.children[2]?.children[2]?.children[0]?.children[1]?.attribs.href;
 
 
-                restaurant.opening_hours = $('.dyeJW.bcYVS').contents() ? $('.dyeJW.bcYVS').contents() : "";
-
+                // restaurant.opening_hours = $('.dyeJW.bcYVS').contents() ? $('.dyeJW.bcYVS').contents() : "";
+                restaurant.opening_hours = "";
                 var coordinatesImageLink = $('.eCPON.w.MD._S')[0].attribs.src;
                 var coordinates = /\|([+-]?[0-9]*[.][0-9]+),([+-]?[0-9]*[.][0-9]+)/.exec(coordinatesImageLink);
                 var coordinate1 = coordinates[1];
                 var coordinate2 = coordinates[2];
-
                 restaurant.location = {
                     type: "Point",
                     coordinates: [coordinate1, coordinate2]
@@ -319,16 +352,16 @@ module.exports = {
                     imgExists = false;
                 }
                 if (imgExists) {
-                    var localImgPath = "/public/images/" + i + /\/([\w|\.|-]*)$/.exec(imgAddress)[1];
+                    var localImgPath = "/images/" + i + /\/([\w|\.|-]*)$/.exec(imgAddress)[1];
 
 
-                    var download = function (uri, filename, callback) {
+                    var download = function await (uri, filename, callback) {
                         request.head(uri, function (err, res, body) {
                             request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
                         });
                     };
 
-                    download(imgAddress, "." + localImgPath, function () {
+                    await download(imgAddress, "./public/" + localImgPath, function () {
                         console.log('image saved');
                     });
 
@@ -340,40 +373,35 @@ module.exports = {
                             });
                         }
                         if (!image) {
-                            await axios.post("http://localhost:5000/image", {path: localImgPath}).then((response) => {
+                             await axios.post("http://localhost:5000/image", {path: localImgPath}).then((response)  =>  {
                                 restaurant.image_id = response.data._id;
+                                addRestaurant();
                             });
                         } else {
-                            restaurant.image_id = image._id;
+                             await axios.put("http://localhost:5000/image/"+image._id.toString(), {path: localImgPath}).then((response) => {
+                                restaurant.image_id = image._id;
+                                addRestaurant();
+                            });
                         }
                     })
+                } else {
+                    addRestaurant();
                 }
 
-                await RestaurantModel.findOne({name: restaurant.name}).exec(function (err, restaurantMongo) {
-                    if (err) {
-                        return res.status(500).json({
-                            message: 'Error when getting restaurant.',
-                            error: err
-                        });
-                    }
+                // if (!image) {
+                //     var data = await fetch("http://localhost:5000/image", {path: localImgPath});
+                //     restaurant.image_id = data.json();
+                //
+                // } else {
+                //     var data = await fetch("http://localhost:5000/image/" + image._id.toString(), {path: localImgPath});
+                //     restaurant.image_id = data.json();
+                //
+                // }
 
-                    if (!restaurantMongo) {
-                        axios.post("http://localhost:5000/restaurant", restaurant).then((response) => {
-                            console.log("restaurant saved");
-                        }, (error) => {
-                            console.log(error);
-                        });
-                    } else {
-                        axios.put("http://localhost:5000/restaurant/" + restaurantMongo._id, restaurant).then((response) => {
-                            console.log("restaurant updated");
-                        }, (error) => {
-                            console.log(error);
-                        });
-                    }
 
-                });
+
             }
-            browser.close()
+            await browser.close()
         })
 
         return res.status(201).json();

@@ -13,6 +13,8 @@ function AddMeal(props) {
     const [price, setPrice] = useState(0);
     const restaurantId = useContext(AccountContext).account.restaurant._id;
 
+
+
     useEffect(function () {
         const getAllergens = async function () {
             const res = await fetch("http://localhost:5000/allergen");
