@@ -10,7 +10,8 @@ const mealSchema = new Schema({
 	 	type: Schema.Types.ObjectId,
 	 	ref: 'restaurant'
 	},
-	'size' : String
+	'size' : String,
+	'is_deleted' : Boolean
 });
 
 module.exports = mongoose.model('meal', mealSchema);

@@ -44,7 +44,8 @@ module.exports = {
 			category : req.body.category,
 			price : req.body.price,
 			restaurant_id : req.body.restaurant_id,
-			size : req.body.size
+			size : req.body.size,
+            is_deleted: false
         });
 
         meal.save(function (err, meal) {
@@ -100,7 +101,8 @@ module.exports = {
 			meal.price = req.body.price ? req.body.price : meal.price;
 			meal.restaurant_id = req.body.restaurant_id ? req.body.restaurant_id : meal.restaurant_id;
 			meal.size = req.body.size ? req.body.size : meal.size;
-			
+			meal.is_deleted = req.body.is_deleted ? req.body.is_deleted : meal.is_deleted;
+
             meal.save(function (err, meal) {
                 if (err) {
                     return res.status(500).json({
@@ -117,44 +119,23 @@ module.exports = {
     remove: function (req, res) {
         const id = req.params.id;
 
-        MealModel.findByIdAndRemove(id, function (err, meal) {
+        MealModel.findById(id, function (err, meal) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when deleting the meal.',
                     error: err
                 });
             }
-
-            RestaurantModel.findById(meal.restaurant_id, function (err, restaurant){
-                if(err){
+            meal.is_deleted = true;
+            meal.save(function (err, meal) {
+                if (err) {
                     return res.status(500).json({
-                        message: 'Error when deleting the meal.',
+                        message: 'Error when updating meal.',
                         error: err
                     });
                 }
-                if(!restaurant){
-                    return res.status(500).json({
-                        message: 'Error when deleting the meal.',
-                        error: err
-                    });
-                }
-
-                const index = restaurant.meals.indexOf(meal._id);
-                if (index > -1) {
-                    restaurant.meals.splice(index, 1); // 2nd parameter means remove one item only
-
-                    restaurant.save(function (err, meal) {
-                        if (err) {
-                            return res.status(500).json({
-                                message: 'Error when updating meal.',
-                                error: err
-                            });
-                        }
-
-                        return res.status(204).json();
-                    });
-                }
-            })
+                return res.status(204).json();
+            });
         });
     }
 };

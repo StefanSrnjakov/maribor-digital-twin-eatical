@@ -11,6 +11,10 @@ import Meals from "./components/restaurant/Meals"
 import Orders from "./components/restaurant/Orders";
 import Restaurants from "./components/restaurant/Restaurants";
 import MyOrders from "./components/users/MyOrders";
+import AdminUsers from "./components/admin/user/Users";
+import EditUser from "./components/admin/user/Edit";
+import AdminRestaurants from "./components/admin/restaurant/Restaurants";
+import ActiveOrders from "./components/users/ActiveOrders";
 
 function App() {
 
@@ -33,10 +37,14 @@ function App() {
                         <Route exact path={"/register"} element={<Register/>}></Route>
                         <Route exact path={"/logout"} element={<Logout/>}></Route>
                         <Route exact path={"/profile"} element={<Profile/>}></Route>
+                        <Route exact path={"/admin/users"} element={<AdminUsers/>}></Route>
+                        <Route exact path={"/admin/users/edit/:id"} element={<EditUser />}></Route>
+                        <Route exact path={"/admin/restaurants"} element={<AdminRestaurants />}></Route>
                         <Route path="/restaurant" exact element={<Restaurants />}></Route>
-                        <Route path="/restaurant/meals" exact element={<Meals/>}></Route>{/*TODO id-TO*/}
-                        <Route path="/restaurant/orders" exact element={<Orders/>}></Route>{/*TODO id-TO*/}
-                        <Route path="/user/orders" exact element={<MyOrders/>}></Route>{/*TODO id-TO*/}
+                        <Route path="/restaurant/meals" exact element={<Meals/>}></Route>
+                        <Route path="/restaurant/orders" exact element={<Orders/>}></Route>
+                        <Route path="/user/orders" exact element={<MyOrders/>}></Route>
+                        <Route path="/user/restaurant/:id" exact element={<ActiveOrders/>}></Route>
                     </Routes>
                 </div>
             </AccountContext.Provider>

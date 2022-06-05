@@ -9,6 +9,7 @@ function Orders(props) {
     const [restaurant, setRestaurant] = useState();
     const [isLoaded, setIsLoaded] = useState(false);
     const id = useContext(AccountContext).account.restaurant._id;
+    const now = new Date();
 
 
     const getRestaurant = async function () {
@@ -27,27 +28,29 @@ function Orders(props) {
         getRestaurant();
     }
 
-    return (<div className="container"
-                 style={{backgroundColor: "white", padding: "20px", marginTop: "30px", borderRadius: "10px"}}>
-        {isLoaded === true && <span style={{textAlign: "left"}}><h3>{restaurant.name}</h3></span>}
-        <div className="container-md">
-            <span className="btn btn-success">Active: </span>
+    return (
+        <div className="container"
+             style={{backgroundColor: "white", padding: "20px", marginTop: "30px", borderRadius: "10px"}}>
+            {isLoaded === true && <span style={{textAlign: "left"}}><h3>{restaurant.name}</h3></span>}
+            <div className="container-md">
+                <span className="btn btn-success">Active: </span>
 
-            {orders.map(order => (order.completed === true && (
-                <Order useFor="restaurant" restaurantName={restaurant.name}
-                       refreshRestaurant={(e) => (refreshRestaurant())}
-                       order={order} key={order._id}></Order>)))}
+                {orders.map(order => (new Date(order.pick_up_time) > now && (
+                    <div key={order._id}><Order useFor="restaurant" isActive="true" restaurantName={restaurant.name}
+                                                refreshRestaurant={(e) => (refreshRestaurant())}
+                                                order={order}></Order></div>)))}
 
+            </div>
+            <div className="container-md" style={{border: "solid 5px whitesmoke", borderRadius: "15px"}}>
+                <span className="btn btn-secondary">Completed: </span>
+                {orders.map(order => (new Date(order.pick_up_time) < now && (
+                    <div key={order._id}><Order useFor="restaurant" restaurantName={restaurant.name}
+                                                refreshRestaurant={(e) => (refreshRestaurant())}
+                                                order={order}></Order></div>)))}
+
+            </div>
         </div>
-        <div className="container-md" style={{border: "solid 5px whitesmoke", borderRadius: "15px"}}>
-            <span className="btn btn-secondary">Completed: </span>
-            {orders.map(order => (order.completed === false && (
-                <Order useFor="restaurant" restaurantName={restaurant.name}
-                       refreshRestaurant={(e) => (refreshRestaurant())}
-                       order={order} key={order._id}></Order>)))}
-
-        </div>
-    </div>);
+    );
 }
 
 export default Orders;

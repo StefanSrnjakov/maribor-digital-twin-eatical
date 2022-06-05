@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const restaurantController = require('../controllers/restaurantController.js');
-const {authenticateRestaurant} = require("../middleware/authentication");
+const {authenticateRestaurant, authenticateAdmin} = require("../middleware/authentication");
 const {loginValidation} = require("../middleware/validation");
 
 /*
@@ -21,6 +21,7 @@ router.get('/:id', restaurantController.show);
 router.post('/', restaurantController.create);
 router.post('/login', loginValidation, restaurantController.login);
 router.post('/logout', authenticateRestaurant, restaurantController.logout);
+router.post('/api', restaurantController.refreshRestaurants);
 /*
  * PUT
  */

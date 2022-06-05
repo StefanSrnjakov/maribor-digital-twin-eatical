@@ -1,5 +1,9 @@
 import {Link} from "react-router-dom";
 import {AccountContext} from "../AccountContext";
+import PersonIcon from '@mui/icons-material/Person';
+import LogoutIcon from '@mui/icons-material/Logout';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import LoginIcon from '@mui/icons-material/Login';
 
 function Header() {
     return (<header>
@@ -22,7 +26,7 @@ function Header() {
                                                 <Link className="nav-link" to='/'>Home</Link>
                                             </li>
                                             <li className="nav-item">
-                                                <Link className="nav-link" to='/restaurants'>Restaurants</Link>
+                                                <Link className="nav-link" to='/restaurants'><RestaurantIcon/>&nbsp;&nbsp;Restaurants</Link>
                                             </li>
                                         </>
                                     }
@@ -53,7 +57,7 @@ function Header() {
                                 <ul className="navbar-nav mr-auto mb-2 mb-lg-0">
                                     {!context.account && <>
                                         <li className="nav-item">
-                                            <Link className="nav-link" to='/login'>Login</Link>
+                                            <Link className="nav-link" to='/login'><LoginIcon/>&nbsp;&nbsp;Login</Link>
                                         </li>
                                         <li className="nav-item">
                                             <Link className="nav-link" to='/register'>Register</Link>
@@ -61,11 +65,11 @@ function Header() {
                                     </>}
                                     {context.account && (context.account.user || context.account.restaurant) &&
                                         <li className="nav-item">
-                                            <Link className="nav-link" to='/profile'>Profile</Link>
+                                            <Link className="nav-link" to='/profile'><PersonIcon />&nbsp;&nbsp;Profile</Link>
                                         </li>}
                                     {context.account && (context.account.user || context.account.restaurant || context.account.admin) &&
                                         <li className="nav-item">
-                                            <Link className="nav-link" to='/logout'>Logout</Link>
+                                            <Link className="nav-link" to='/logout'><LogoutIcon /> &nbsp;&nbsp;Log Out</Link>
                                         </li>}
                                 </ul>
                             </>

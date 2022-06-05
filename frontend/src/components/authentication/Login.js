@@ -24,6 +24,7 @@ function Login() {
         const data = await res.json();
 
         if (data.token !== undefined) {
+            console.log(data);
             accountContext.update(data);
             window.location.href = "/";
         } else {
