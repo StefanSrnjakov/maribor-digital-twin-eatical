@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
+import '../../styles/formStyle.css'
+
 
 function EditUser() {
     const { id } = useParams()
@@ -10,15 +12,16 @@ function EditUser() {
         const res = await fetch("http://localhost:5000/user/"+id);
         const data = await res.json();
         setUser(data)
+        setUsername(data.username)
+        setEmail(data.email)
+        setTelephone(data.telephone)
+        setName(data.name)
+        setSurname(data.surname)
     }
 
     useEffect(function () {
         getUser();
-        setUsername(user.email)
-        setEmail(user.email)
-        setTelephone(user.telephone)
-        setName(user.name)
-        setSurname(user.surname)
+
     }, []);
 
     const [username, setUsername] = useState("");
@@ -33,7 +36,7 @@ function EditUser() {
 
     async function edit(event) {
         event.preventDefault();
-        const res = await fetch('http://localhost:5000/user/', {
+        const res = await fetch('http://localhost:5000/user/'+id, {
             method: 'PUT',
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
@@ -46,7 +49,8 @@ function EditUser() {
             })
         });
 
-        const data = await res.json();
+        await res.json();
+        window.location.href = "/admin/users";
 
 
     }
@@ -84,7 +88,7 @@ function EditUser() {
                                value={telephone}
                                onChange={e => setTelephone(e.target.value)}/>
                     </div>
-                    <input type="submit" name="submit" value="Edit"/>
+                    <input className={"purple btn mt-2"} type="submit" name="submit" value="Edit"/>
                     <label>{error}</label>
 
                 </form>

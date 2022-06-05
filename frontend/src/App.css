@@ -22,3 +22,12 @@
 body{
     background-color: whitesmoke;
 }
+
+.navbar{
+    background-color: #63458A;
+    color: #FBFEFB;
+}
+
+.navbar-brand, .nav-link{
+    color: #FBFEFB;
+}

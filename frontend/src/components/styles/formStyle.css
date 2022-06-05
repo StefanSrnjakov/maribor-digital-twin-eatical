@@ -1,0 +1,18 @@
+.purple{
+    background: #7E5A9B;
+    color: #FBFEFB;
+}
+
+.purple:hover, .purple:focus{
+    background: #63458A;
+    color: #FBFEFB;
+}
+
+.yellow{
+    background: #E3B23C;
+    color: #FBFEFB;
+}
+.yellow:hover, .yellow:focus{
+     background: #e0a926;
+     color: #FBFEFB;
+ }
