@@ -3,6 +3,7 @@ import Order from "../restaurant/Order";
 import {useContext} from "react";
 import {AccountContext} from "../../AccountContext";
 import {useParams} from "react-router-dom";
+import '../styles/formStyle.css'
 
 
 function ActiveOrders(props) {
@@ -33,7 +34,7 @@ function ActiveOrders(props) {
              style={{backgroundColor: "white", padding: "20px", marginTop: "30px", borderRadius: "10px"}}>
             {isLoaded === true && <span style={{textAlign: "left"}}><h3>{restaurant.name}</h3></span>}
             <div className="container-md">
-                <span className="btn btn-success">Active: </span>
+                <span className="btn yellow">Active: </span>
 
                 {activeOrders.map(order => (order.completed === false && (
                     <div key={order._id}><Order useFor="user" toCreate="true" userName={restaurant.name}

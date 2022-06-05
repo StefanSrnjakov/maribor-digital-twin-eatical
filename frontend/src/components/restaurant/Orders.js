@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Order from "./Order";
 import {useContext} from "react";
 import {AccountContext} from "../../AccountContext";
+import './../styles/formStyle.css'
 
 
 function Orders(props) {
@@ -33,7 +34,7 @@ function Orders(props) {
              style={{backgroundColor: "white", padding: "20px", marginTop: "30px", borderRadius: "10px"}}>
             {isLoaded === true && <span style={{textAlign: "left"}}><h3>{restaurant.name}</h3></span>}
             <div className="container-md">
-                <span className="btn btn-success">Active: </span>
+                <span className="btn yellow">Active: </span>
 
                 {orders.map(order => (new Date(order.pick_up_time) > now && (
                     <div key={order._id}><Order useFor="restaurant" isActive="true" restaurantName={restaurant.name}
@@ -42,7 +43,7 @@ function Orders(props) {
 
             </div>
             <div className="container-md" style={{border: "solid 5px whitesmoke", borderRadius: "15px"}}>
-                <span className="btn btn-secondary">Completed: </span>
+                <span className="btn purple">Completed: </span>
                 {orders.map(order => (new Date(order.pick_up_time) < now && (
                     <div key={order._id}><Order useFor="restaurant" restaurantName={restaurant.name}
                                                 refreshRestaurant={(e) => (refreshRestaurant())}

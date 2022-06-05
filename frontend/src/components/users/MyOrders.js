@@ -4,6 +4,7 @@ import {useContext} from "react";
 import {AccountContext} from "../../AccountContext";
 import Chip from '@mui/material/Chip';
 import FaceIcon from '@mui/icons-material/Face';
+import './../styles/formStyle.css'
 
 
 function MyOrders(props) {
@@ -31,7 +32,7 @@ function MyOrders(props) {
              style={{backgroundColor: "white", padding: "20px", marginTop: "30px", borderRadius: "10px"}}>
             {isLoaded === true && <span style={{textAlign: "left"}}><h3><Chip icon={<FaceIcon/>} label={user.name} /></h3></span>}
             <div className="container-md">
-                <span className="btn btn-success">Active: </span>
+                <span className="btn purple">Active: </span>
 
                 {myOrders.map(order => (new Date(order.pick_up_time) >= now && (<Order useFor="user" userName={user.name}
                                                                                        refreshUser={(e) => (refreshUser())}
@@ -39,7 +40,7 @@ function MyOrders(props) {
 
             </div>
             <div className="container-md" style={{border:"solid 5px whitesmoke", borderRadius:"15px"}}>
-                <span className="btn btn-secondary">Completed: </span>
+                <span className="btn yellow">Completed: </span>
                 {myOrders.map(order => (new Date(order.pick_up_time) <= now && (<Order useFor="user" restaurantName={order.meal_id.restaurant_id.name} userName={user.name}
                                                                                        refreshUser={(e) => (refreshUser())}
                                                                                        order={order} key={order._id}></Order>)))}

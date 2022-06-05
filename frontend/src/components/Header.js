@@ -14,7 +14,7 @@ function Header() {
     return (<header>
         <div className={"m-4 p-1"}>
         <nav className={"navbar navbar-expand-lg fixed-top"} color={"white"} >
-            <div className="container-fluid" style={{backgroundColor:"#7E5A9B"}} >
+            <div className="container-fluid">
 
                 {/*Logo*/}
                 <Link className="navbar-brand" to='#'>Eatical</Link>
