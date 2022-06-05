@@ -1,6 +1,7 @@
 import {Component} from "react";
 import Restaurant from './Restaurant';
 import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
+import './../styles/formStyle.css'
 
 class Restaurants extends Component {
     constructor(props){
@@ -66,16 +67,16 @@ class Restaurants extends Component {
                         <span>
                             {
                                 this.state.showAll ?
-                                    <button type="button" className="btn btn-info btn-sm" name="all" id="all" onClick={this.componentDidMount.bind(this)}>All</button>
+                                    <button type="button" className="btn purple" name="all" id="all" onClick={this.componentDidMount.bind(this)}>All</button>
                                     :
-                                    <button type="button" className="btn btn-outline-info btn-sm" name="all" id="all" onClick={this.componentDidMount.bind(this)}>All</button>
+                                    <button type="button" className="btn yellow" name="all" id="all" onClick={this.componentDidMount.bind(this)}>All</button>
                             }
                             <>  </>
                             {
                                 this.state.showNearby ?
-                                    <button type="button" className="btn btn-info btn-sm" name="nearby" id="nearby" onClick={this.fetchNearby.bind(this)}>Nearby</button>
+                                    <button type="button" className="btn purple" name="nearby" id="nearby" onClick={this.fetchNearby.bind(this)}>Nearby</button>
                                     :
-                                    <button type="button" className="btn btn-outline-info btn-sm" name="nearby" id="nearby" onClick={this.fetchNearby.bind(this)}>Nearby</button>
+                                    <button type="button" className="btn yellow" name="nearby" id="nearby" onClick={this.fetchNearby.bind(this)}>Nearby</button>
                             }
                         </span>
                         <div className="list-group list-group-flush overflow-auto vh-100" style={{textAlign: "left"}}>

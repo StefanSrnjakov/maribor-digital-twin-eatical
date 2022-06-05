@@ -1,8 +1,10 @@
 import {AccountContext} from "../AccountContext";
+import React from "react";
 
 function Profile() {
     return (
-        <>
+        <div className="container" style={{backgroundColor: "white", padding: "20px", marginTop: "30px", borderRadius: "10px"}}>
+            <div className="container-md">
             <h2>Profile</h2>
 
             <AccountContext.Consumer>
@@ -31,7 +33,8 @@ function Profile() {
                     </>
                 )}
             </AccountContext.Consumer>
-        </>
+            </div>
+        </div>
     )
 
 
