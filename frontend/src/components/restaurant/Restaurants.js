@@ -113,7 +113,7 @@ class Restaurants extends Component {
                                             }}>
                                                 <div style={{
                                                     backgroundColor: "#63458A",
-                                                    paddingLeft: "2%",
+                                                    paddingLeft: "12px",
                                                     color: "white",
                                                     fontSize: "22px",
                                                     borderTopLeftRadius: "15px",
@@ -129,101 +129,112 @@ class Restaurants extends Component {
                                                         src={"http://localhost:5000/" + restaurant.image_id.path}></img>
                                                     </div> : <></>
                                                 }
-                                                {
-                                                    restaurant.address ?
-                                                        <div className="row">
-                                                            <div className="col-2" style={{verticalAling: "center"}}>
+                                                <div style={{padding:"12px"}}>
+
+                                                    {
+                                                        restaurant.address ?
+                                                            <div className="row">
+                                                                <div className="col-2"
+                                                                     style={{verticalAling: "center"}}>
                                                                 <span>
                                                                     <HomeIcon fontSize="large"
                                                                               style={{color: "#E3B23C"}}/>
                                                                 </span>
-                                                            </div>
-                                                            <div className="col"><span
-                                                                style={{fontSize: "17px"}}>{restaurant.address}
+                                                                </div>
+                                                                <div className="col"><span
+                                                                    style={{fontSize: "17px"}}>{restaurant.address}
                                                     </span>
-                                                            </div>
-                                                        </div> : <></>}
+                                                                </div>
+                                                            </div> : <></>}
 
-                                                {
-                                                    restaurant.google_rating ?
-                                                        <div className="row">
-                                                            <div className="col-2" style={{verticalAling: "center"}}>
+                                                    {
+                                                        restaurant.google_rating ?
+                                                            <div className="row">
+                                                                <div className="col-2"
+                                                                     style={{verticalAling: "center"}}>
                                                                 <span>
                                                                     <StarOutlineIcon fontSize="large"
                                                                                      style={{color: "#E3B23C"}}/>
                                                                 </span>
-                                                            </div>
-                                                            <div className="col"><span
-                                                                style={{fontSize: "17px"}}>{restaurant.google_rating}</span><br/>
-                                                            </div>
-                                                        </div> : <></>
-                                                }
-                                                {
-                                                    restaurant.opening_hours ?
-                                                        <div className="row">
-                                                            <div className="col-2" style={{verticalAling: "center"}}>
+                                                                </div>
+                                                                <div className="col"><span
+                                                                    style={{fontSize: "17px"}}>{restaurant.google_rating}</span><br/>
+                                                                </div>
+                                                            </div> : <></>
+                                                    }
+                                                    {
+                                                        restaurant.opening_hours ?
+                                                            <div className="row">
+                                                                <div className="col-2"
+                                                                     style={{verticalAling: "center"}}>
                                                                 <span>
                                                                     <QueryBuilderIcon fontSize="large"
                                                                                       style={{color: "#E3B23C"}}/>
                                                                 </span>
-                                                            </div>
-                                                            <div className="col">
+                                                                </div>
+                                                                <div className="col">
                                                                 <span
                                                                     style={{fontSize: "17px"}}> {restaurant.opening_hours}</span><br/>
-                                                            </div>
-                                                        </div> : <></>}
-                                                {
-                                                    restaurant.website ?
-                                                        <div className="row">
-                                                            <div className="col-2" style={{verticalAling: "center"}}>
+                                                                </div>
+                                                            </div> : <></>}
+                                                    {
+                                                        restaurant.website ?
+                                                            <div className="row">
+                                                                <div className="col-2"
+                                                                     style={{verticalAling: "center"}}>
                                                                 <span>
                                                                     <LanguageIcon fontSize="large"
                                                                                   style={{color: "#E3B23C"}}/>
                                                                 </span>
-                                                            </div>
-                                                            <div className="col">
+                                                                </div>
+                                                                <div className="col">
                                                                 <span
                                                                     style={{fontSize: "17px"}}>{restaurant.website}</span><br/>
-                                                            </div>
-                                                        </div> : <></>}
-                                                {
-                                                    restaurant.email ?
-                                                        <div className="row">
-                                                            <div className="col-2" style={{verticalAling: "center"}}>
+                                                                </div>
+                                                            </div> : <></>}
+                                                    {
+                                                        restaurant.email ?
+                                                            <div className="row">
+                                                                <div className="col-2"
+                                                                     style={{verticalAling: "center"}}>
                                                                 <span>
                                                                     <MarkEmailReadIcon fontSize="large"
                                                                                        style={{color: "#E3B23C"}}/>
                                                                 </span>
-                                                            </div>
-                                                            <div className="col">
+                                                                </div>
+                                                                <div className="col">
                                                                 <span
                                                                     style={{fontSize: "17px"}}>{restaurant.email}</span><br/>
-                                                            </div>
-                                                        </div> : <></>}
-                                                {
-                                                    restaurant.telephone ?
-                                                        <div className="row">
-                                                            <div className="col-2" style={{verticalAling: "center"}}>
+                                                                </div>
+                                                            </div> : <></>}
+                                                    {
+                                                        restaurant.telephone ?
+                                                            <div className="row">
+                                                                <div className="col-2"
+                                                                     style={{verticalAling: "center"}}>
                                                                 <span>
                                                                     <CallIcon fontSize="large"
                                                                               style={{color: "#E3B23C"}}/>
                                                                 </span>
-                                                            </div>
-                                                            <div className="col">
+                                                                </div>
+                                                                <div className="col">
                                                             <span
                                                                 style={{fontSize: "17px"}}>{restaurant.telephone}</span><br/>
-                                                            </div>
-                                                        </div> : <></>
-                                                }
-                                                {
-                                                    restaurant.orders.length > 0 ?
-                                                        <Link className="nav-link"
-                                                              to={'/user/restaurant/' + restaurant._id}><Button
-                                                            style={{color: "#63458A"}}>Order now</Button></Link> : <></>
-                                                }
+                                                                </div>
+                                                            </div> : <></>
+                                                    }
+                                                    {
+                                                        restaurant.orders.length > 0 ?
+                                                            <Link className="nav-link"
+                                                                  to={'/user/restaurant/' + restaurant._id}><Button
+                                                                style={{color: "#63458A"}}>Order
+                                                                now</Button></Link> : <></>
+                                                    }
+                                                </div>
                                             </div>
                                             :
                                             <></>
+
                                     }
                                     <hr></hr>
                                 </div>
