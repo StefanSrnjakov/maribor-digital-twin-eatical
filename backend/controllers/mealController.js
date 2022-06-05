@@ -39,12 +39,12 @@ module.exports = {
 
     create: function (req, res) {
         const meal = new MealModel({
-            name: req.body.name,
-            allergens: req.body.allergens,
-            category: req.body.category,
-            price: req.body.price,
-            restaurant_id: req.body.restaurant_id,
-            size: req.body.size,
+			name : req.body.name,
+			allergens : req.body.allergens,
+			category : req.body.category,
+			price : req.body.price,
+			restaurant_id : req.body.restaurant_id,
+			size : req.body.size,
             is_deleted: false
         });
 
@@ -96,11 +96,12 @@ module.exports = {
             }
 
             meal.name = req.body.name ? req.body.name : meal.name;
-            meal.allergens = req.body.allergens ? req.body.allergens : meal.allergens;
-            meal.category = req.body.category ? req.body.category : meal.category;
-            meal.price = req.body.price ? req.body.price : meal.price;
-            meal.restaurant_id = req.body.restaurant_id ? req.body.restaurant_id : meal.restaurant_id;
-            meal.size = req.body.size ? req.body.size : meal.size;
+			meal.allergens = req.body.allergens ? req.body.allergens : meal.allergens;
+			meal.category = req.body.category ? req.body.category : meal.category;
+			meal.price = req.body.price ? req.body.price : meal.price;
+			meal.restaurant_id = req.body.restaurant_id ? req.body.restaurant_id : meal.restaurant_id;
+			meal.size = req.body.size ? req.body.size : meal.size;
+			meal.is_deleted = req.body.is_deleted ? req.body.is_deleted : meal.is_deleted;
 
             meal.save(function (err, meal) {
                 if (err) {

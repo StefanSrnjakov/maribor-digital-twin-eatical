@@ -37,8 +37,8 @@ function ActiveOrders(props) {
 
                 {activeOrders.map(order => (order.completed === false && (
                     <div key={order._id}><Order useFor="user" toCreate="true" userName={restaurant.name}
-                                refreshRestaurant={(e) => (refreshRestaurant())}
-                                order={order} ></Order></div>)))}
+                                                refreshRestaurant={(e) => (refreshRestaurant())}
+                                                order={order} ></Order></div>)))}
 
             </div>
 

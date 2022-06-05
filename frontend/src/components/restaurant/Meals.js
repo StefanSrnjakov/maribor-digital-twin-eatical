@@ -8,25 +8,20 @@ import AddTaskOutlinedIcon from '@mui/icons-material/AddTaskOutlined';
 
 function Meals() {
     const [meals, setMeals] = useState([]);
-
     const [selectedMealsId, setSelectedMealsId] = useState([]);
     const [selectedMealsPrice, setSelectedMealsPrice] = useState([]);
     const [pickUpTime, setPickUpTime] = useState();
     const [orderUpToTime, setOrderUpToTime] = useState();
-
     const [restaurant, setRestaurant] = useState();
     const [isLoaded, setIsLoaded] = useState(false);
     const [isAddNewMealClicked, setAddNewMeal] = useState(false);
-    const [isSelectMealsClicked, setSelectMeals] = useState(false)
-
-
+    const [isSelectMealsClicked, setSelectMeals] = useState(false);
     const id = useContext(AccountContext).account.restaurant._id;
 
     const getRestaurant = async function () {
         const res = await fetch("http://localhost:5000/restaurant/" + id);
         const data = await res.json();
         setMeals(data.meals);
-
         setRestaurant(data);
         setIsLoaded(true);
     }
@@ -34,7 +29,6 @@ function Meals() {
     useEffect(function () {
         getRestaurant();
     }, []);
-
     function addNewHandle() {
         setAddNewMeal(true);
         setSelectMeals(false);
@@ -93,12 +87,12 @@ function Meals() {
             {isLoaded === true && <span style={{textAlign: "left"}}><h3>{restaurant.name}</h3></span>}
             <div className="container-md">
                 {meals.map(meal => meal.is_deleted? <></> : (<div key={meal._id} className="container"
-                                         style={{
-                                             margin: "10px",
-                                             padding: "10px",
-                                             border: "solid 2px whitesmoke",
-                                             borderRadius: "10px"
-                                         }}>
+                                                                  style={{
+                                                                      margin: "10px",
+                                                                      padding: "10px",
+                                                                      border: "solid 2px whitesmoke",
+                                                                      borderRadius: "10px"
+                                                                  }}>
                     <Meal isSelectMealsClicked={isSelectMealsClicked} useFor="meal"
                           refreshRestaurant={(e) => (refreshRestaurant())} meal={meal}
                     ></Meal>

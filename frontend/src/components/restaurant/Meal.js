@@ -1,19 +1,18 @@
 import React, {useState, useEffect} from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
-// import React from "@types/react";
 
 function Meal(props) {
-    const [meal, setMeal] = useState(props.meal);
+    const meal = props.meal;
 
-    async function deleteMealHandler(e) {
-        const res = await fetch("http://localhost:5000/meal/" + meal._id, {
+    async function deleteMealHandler() {
+        await fetch("http://localhost:5000/meal/" + meal._id, {
             method: "DELETE"
         });
         props.refreshRestaurant();
     }
 
-    return (
 
+    return (
         <div className="row">
             <div className="col-8" style={{textAlign: "left"}}>
 

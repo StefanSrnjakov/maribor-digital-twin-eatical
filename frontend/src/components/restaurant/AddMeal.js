@@ -33,7 +33,7 @@ function AddMeal(props) {
     }, []);
 
     const handleCheckCategory = (event) => {
-        var updatedList = [...checkedCategories];
+        let updatedList = [...checkedCategories];
         if (event.target.checked) {
             updatedList = [...checkedCategories, event.target.name];
         } else {
@@ -53,7 +53,7 @@ function AddMeal(props) {
 
     async function handleSubmit(e){
         e.preventDefault();
-        const res = await fetch("http://localhost:5000/meal", {
+        await fetch("http://localhost:5000/meal", {
             method: "POST",
             credentials: "include",
             headers: { 'Content-Type': 'application/json'},

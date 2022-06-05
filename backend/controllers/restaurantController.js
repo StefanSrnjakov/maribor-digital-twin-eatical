@@ -12,7 +12,6 @@ const {response} = require("express");
 const request = require("request");
 const fs = require("fs");
 
-
 module.exports = {
 
     list: function (req, res) {
@@ -30,7 +29,6 @@ module.exports = {
 
     show: function (req, res) {
         const id = req.params.id;
-
         RestaurantModel.findOne({_id: id})
             .populate({
                 path: 'meals',
@@ -87,8 +85,7 @@ module.exports = {
 
                 return res.json(restaurant);
             });
-    }
-    ,
+    },
 
     create: function (req, res) {
 
@@ -120,17 +117,19 @@ module.exports = {
 
             return res.status(201).json(restaurant);
         });
-    }
-    ,
+    },
 
     login: async function (req, res) {
         //Check if the username is in the database
         const restaurant = await RestaurantModel.findOne({username: req.body.username});
-        if (!restaurant) return res.status(400).json({error: 'Username does not exists'});
+        if(!restaurant) return res.status(400).json({error: 'Username does not exists'});
 
         // //Check if password is correct
-        // const validPassword = await bcrypt.compare(req.body.password, restaurant.password);
-        // if(!validPassword) return res.status(400).json({error: 'Invalid password'});
+        const validPassword = await bcrypt.compare(req.body.password, restaurant.password);
+        console.log(validPassword)
+        console.log(req.body.password)
+        console.log(restaurant.password)
+        if(!validPassword) return res.status(400).json({error: 'Invalid password'});
 
         //Create and assign a token
         const token = new TokenModel({
@@ -145,20 +144,18 @@ module.exports = {
             if (err) res.status(500).json({error: 'Token failed to save'});
             return res.header('auth-token', result).json({id: mongoToken._id, token: result, restaurant: restaurant});
         });
-    }
-    ,
+    },
 
     logout: async function (req, res) {
         console.log(req.body.id)
 
-        TokenModel.findByIdAndRemove(req.body.id, function (err, token) {
+        TokenModel.findByIdAndRemove(req.body.id, function(err, token){
             console.log(token)
             if (err) return res.status(500).json('Token failed to remove');
             if (!token) res.json('Token does not exist');
             return res.json('Token removed');
         });
-    }
-    ,
+    },
 
     update: function (req, res) {
         const id = req.params.id;
@@ -204,8 +201,7 @@ module.exports = {
                 return res.json(restaurant);
             });
         });
-    }
-    ,
+    },
 
     remove: function (req, res) {
         const id = req.params.id;
@@ -220,20 +216,19 @@ module.exports = {
 
             return res.status(204).json();
         });
-    }
-    ,
+    },
 
-    list_nearby: function (req, res) {
+    list_nearby: function(req, res) {
         RestaurantModel.find({
             location:
                 {
                     $near:
                         {
-                            $geometry: {type: "Point", coordinates: [46.5547, 15.6459]},
+                            $geometry: { type: "Point", coordinates: [46.5547, 15.6459] },
                             $maxDistance: 500
                         }
                 }
-        }, function (err, restaurants) {
+        }, function(err, restaurants){
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting restaurants.',
@@ -243,11 +238,10 @@ module.exports = {
 
             return res.json(restaurants);
         });
-    }
-    ,
+    },
 
-    rate: function (req, res) {
-        RestaurantModel.findByIdAndUpdate(req.params.id, {$push: {ratings: req.body.rating}}, function (err, restaurant) {
+    rate: function(req, res){
+        RestaurantModel.findByIdAndUpdate(req.params.id, {$push: {ratings : req.body.rating}}, function(err, restaurant){
             if (err) {
                 return res.status(500).json({
                     message: 'Error when updating restaurant.',
@@ -258,6 +252,7 @@ module.exports = {
             return res.json(restaurant);
         });
     },
+
     refreshRestaurants: async function (req, res) {
 
         puppeteer.use(StealthPlugin());

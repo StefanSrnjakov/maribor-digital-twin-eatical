@@ -20,15 +20,12 @@ function MyOrders(props) {
         setUser(data);
         setIsLoaded(true);
     }
-
     useEffect(function () {
         getUser();
     }, []);
-
     async function refreshUser() {
         getUser();
     }
-
     return (
         <div className="container"
              style={{backgroundColor: "white", padding: "20px", marginTop: "30px", borderRadius: "10px"}}>
@@ -37,19 +34,18 @@ function MyOrders(props) {
                 <span className="btn btn-success">Active: </span>
 
                 {myOrders.map(order => (new Date(order.pick_up_time) >= now && (<Order useFor="user" userName={user.name}
-                                                                            refreshUser={(e) => (refreshUser())}
-                                                                            order={order} key={order._id}></Order>)))}
+                                                                                       refreshUser={(e) => (refreshUser())}
+                                                                                       order={order} key={order._id}></Order>)))}
 
             </div>
             <div className="container-md" style={{border:"solid 5px whitesmoke", borderRadius:"15px"}}>
                 <span className="btn btn-secondary">Completed: </span>
                 {myOrders.map(order => (new Date(order.pick_up_time) <= now && (<Order useFor="user" restaurantName={order.meal_id.restaurant_id.name} userName={user.name}
-                                                                             refreshUser={(e) => (refreshUser())}
-                                                                             order={order} key={order._id}></Order>)))}
+                                                                                       refreshUser={(e) => (refreshUser())}
+                                                                                       order={order} key={order._id}></Order>)))}
 
             </div>
         </div>
     );
 }
-
 export default MyOrders;
