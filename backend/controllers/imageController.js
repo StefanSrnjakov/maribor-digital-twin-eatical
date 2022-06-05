@@ -72,8 +72,8 @@ module.exports = {
                 });
             }
 
-            image.name = req.body.name ? req.body.name : image.name;
-			image.description = req.body.description ? req.body.description : image.description;
+            image.name = req.body.name ? req.body.name : image.name ? "": "";
+			image.description = req.body.description ? req.body.description : image.description ? "" : "";
 			image.path = req.body.path ? req.body.path : image.path;
 			
             image.save(function (err, image) {
