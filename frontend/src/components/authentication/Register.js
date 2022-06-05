@@ -77,7 +77,7 @@ function Register() {
                                value={telephone}
                                onChange={e => setTelephone(e.target.value)}/>
                     </div>
-                    <input type="submit" name="submit" value="Register"/>
+                    <input className={"btn purple mt-2"} type="submit" name="submit" value="Register"/>
                     <label>{error}</label>
 
                 </form>

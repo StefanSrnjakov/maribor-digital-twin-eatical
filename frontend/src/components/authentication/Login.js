@@ -1,5 +1,8 @@
 import React, { useContext, useState } from "react";
 import { AccountContext } from "../../AccountContext";
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import '../styles/formStyle.css'
 
 function Login() {
 
@@ -54,8 +57,8 @@ function Login() {
                                value={password}
                                onChange={e => setPassword(e.target.value)}/>
                     </div>
-                    <input type={"submit"} name="submit" value="Log in as User" onClick={e => setType("user")}/>
-                    <input type={"submit"} name="submit" value="Log in as Restaurant"
+                    <input className={"btn purple"} type={"submit"} name="submit" value="Log in as User" onClick={e => setType("user")}/>
+                    <input className={"btn yellow m-2"} type={"submit"} name="submit" value="Log in as Restaurant"
                            onClick={e => setType("restaurant")}/>
                     <label>{error}</label>
 

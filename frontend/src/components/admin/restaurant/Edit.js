@@ -2,33 +2,29 @@ import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import '../../styles/formStyle.css'
 
-
-function EditUser() {
+function EditRestaurant() {
     const { id } = useParams()
 
-    const [user, setUser] = useState([])
+    const [restaurant, setRestaurant] = useState([])
 
-    const getUser = async function () {
-        const res = await fetch("http://localhost:5000/user/"+id);
+    const getRestaurant = async function () {
+        const res = await fetch("http://localhost:5000/restaurant/"+id);
         const data = await res.json();
-        setUser(data)
+        setRestaurant(data)
         setUsername(data.username)
         setEmail(data.email)
-        setTelephone(data.telephone)
+        setAddress(data.address)
         setName(data.name)
-        setSurname(data.surname)
     }
 
     useEffect(function () {
-        getUser();
-
+        getRestaurant();
     }, []);
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
-    const [telephone, setTelephone] = useState("");
+    const [address, setAddress] = useState("");
     const [name, setName] = useState("");
-    const [surname, setSurname] = useState("");
     const [error, setError] = useState("");
 
 
@@ -36,23 +32,20 @@ function EditUser() {
 
     async function edit(event) {
         event.preventDefault();
-        const res = await fetch('http://localhost:5000/user/'+id, {
+        const res = await fetch('http://localhost:5000/restaurant/'+id, {
             method: 'PUT',
             credentials: 'include',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 username: username,
                 email: email,
-                telephone: telephone,
+                address: address,
                 name: name,
-                surname: surname,
             })
         });
 
         await res.json();
-        window.location.href = "/admin/users";
-
-
+        window.location.href = "/admin/restaurants";
     }
 
     return (
@@ -67,11 +60,6 @@ function EditUser() {
                                onChange={e => setName(e.target.value)}/>
                     </div>
                     <div className={"form-group"}>
-                        <label>Surname</label>
-                        <input type={"text"} className={"form-control"} placeholder={"Enter surname"} value={surname}
-                               onChange={e => setSurname(e.target.value)}/>
-                    </div>
-                    <div className={"form-group"}>
                         <label>Username</label>
                         <input type={"text"} className={"form-control"} placeholder={"Enter username"} value={username}
                                onChange={e => setUsername(e.target.value)}/>
@@ -84,9 +72,9 @@ function EditUser() {
 
                     <div className={"form-group"}>
                         <label>Telephone</label>
-                        <input type={"text"} className={"form-control"} placeholder={"Enter telephone"}
-                               value={telephone}
-                               onChange={e => setTelephone(e.target.value)}/>
+                        <input type={"text"} className={"form-control"} placeholder={"Enter address"}
+                               value={address}
+                               onChange={e => setAddress(e.target.value)}/>
                     </div>
                     <input className={"purple btn mt-2"} type="submit" name="submit" value="Edit"/>
                     <label>{error}</label>
@@ -100,4 +88,4 @@ function EditUser() {
 
 }
 
-export default EditUser;
+export default EditRestaurant;
